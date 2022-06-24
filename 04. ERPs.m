@@ -37,16 +37,16 @@ for s=[1:participants]
         elec.PO8 = find(strcmp({EEG.chanlocs.labels}, 'PO8')==1) ;
         elec.PO3 = find(strcmp({EEG.chanlocs.labels}, 'PO3')==1) ;
         elec.PO4 = find(strcmp({EEG.chanlocs.labels}, 'PO4')==1) ;
-        VEOG = find(strcmp({EEG.chanlocs.labels}, 'VEOG')==1);		%INDEX CHANNEL
-        HEOG = find(strcmp({EEG.chanlocs.labels}, 'HEOG')==1);		%INDEX CHANNEL
-        VEOG2 = find(strcmp({EEG.chanlocs.labels}, 'VEOG2')==1);		%INDEX CHANNEL
-        HEOG2 = find(strcmp({EEG.chanlocs.labels}, 'HEOG2')==1);		%INDEX CHANNEL
-        M1 = find(strcmp({EEG.chanlocs.labels}, 'M1')==1);		%INDEX CHANNEL
-        M2 = find(strcmp({EEG.chanlocs.labels}, 'M2')==1);		%INDEX CHANNEL
-        Heartrate = find(strcmp({EEG.chanlocs.labels}, 'Heartrate')==1);		%INDEX CHANNEL
+        elec.VEOG = find(strcmp({EEG.chanlocs.labels}, 'VEOG')==1);		%INDEX CHANNEL
+        elec.HEOG = find(strcmp({EEG.chanlocs.labels}, 'HEOG')==1);		%INDEX CHANNEL
+        elec.VEOG2 = find(strcmp({EEG.chanlocs.labels}, 'VEOG2')==1);		%INDEX CHANNEL
+        elec.HEOG2 = find(strcmp({EEG.chanlocs.labels}, 'HEOG2')==1);		%INDEX CHANNEL
+        elec.M1 = find(strcmp({EEG.chanlocs.labels}, 'M1')==1);		%INDEX CHANNEL
+        elec.M2 = find(strcmp({EEG.chanlocs.labels}, 'M2')==1);		%INDEX CHANNEL
+        elec.Heartrate = find(strcmp({EEG.chanlocs.labels}, 'Heartrate')==1);		%INDEX CHANNEL
         
         
-        electrodes.to_excl = [VEOG HEOG VEOG2 M1 M2 Heartrate];
+        electrodes.to_excl = [elec.VEOG elec.HEOG elec.VEOG2 elec.M1 elec.M2 elec.Heartrate];
         electrodes.P300 = [elec.P3 elec.P1 elec.Pz elec.P2 elec.P4 elec.CP3 elec.CP1 elec.CPz elec.CP2 elec.CP4]
         electrodes.VAN = [elec.O1 elec.Oz elec.O2 elec.PO7 elec.PO8]
         
