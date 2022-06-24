@@ -44,12 +44,12 @@ for s=[1:participants]
         
         EEG = pop_resample( EEG, 256);
         
-        corr_threshold = 0.85;
-        noise_threshold = 4;
-        window_len = 5;
-        max_broken_time = 0.4;
-        num_samples = 50;
-        subset_size = 0.25;
+        corr_threshold = 0.85; %Correlation threshold. If a channel is correlated at less than this value to its robust estimate (based on other channels), it is considered abnormal in the given time window. 
+        noise_threshold = 4; %If a channel has more line noise relative to its signal than this value, in standard deviations from the channel population mean, it is considered abnormal.
+        window_len = 5; %Length of the windows (in seconds) for which correlation is computed
+        max_broken_time = 0.4; %Maximum time (either in seconds or as fraction of the recording) during which a retained channel may be broken
+        num_samples = 50; %Number of RANSAC samples. This is the number of samples to generate in the random sampling consensus process. The larger this value, the more robust but also slower   %the processing will be.
+        subset_size = 0.25; %Subset size. This is the size of the channel subsets to use for robust reconstruction, as a fraction of the total number of channels.
         
         [EEG,removed_channels] = clean_channels(EEG,corr_threshold,noise_threshold,window_len,max_broken_time,num_samples,subset_size)
         
