@@ -48,6 +48,7 @@ summary.mean_components = mean([data.rejected_components])
 summary.std_components = std([data.rejected_components])
 
 % external plugin required for an export to html --> https://www.mathworks.com/matlabcentral/fileexchange/25078-html-table-writer
+% can be found in /helpers/
 
 colheads_data = fieldnames(data)'
 colheads_summary = fieldnames(summary)'
