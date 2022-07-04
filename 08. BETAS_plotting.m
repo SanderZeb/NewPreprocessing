@@ -1,6 +1,6 @@
 root = 'D:\Drive\1 - Threshold\'
 pathEEGData = [root 'MARA\']
-pathBETAS = [ root '\tfdata\betas\']
+pathBETAS = [ root '\tfdata\betas_intercept\']
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
 settings.paradigm = 1;
@@ -72,11 +72,23 @@ fnames(1:8) = []
 EEG = pop_loadset('filename',listEEGData(1).name,'filepath',pathEEGData);
 chanlocs = EEG.chanlocs;
 [~,~,~,times,freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
-clear EEG
+clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
+if settings.paradigm == 1
+    % 16942_1; 19520_1; 19933_1; 37104_1; 41820_1; 45997_1; 82170_1;
+    % 87808_1; 96269_1
+    participants_to_drop = [5 6 7 37 40 46 88 101 117]; % due to the poor ICA decoposition
+end
+if settings.paradigm == 4
+    % 35464_4; 52235_4; 72692_4; 79587_4; 91259_4; 95229_4;
+    participants_to_drop = [17 30 50 54 67 69]; % due to the poor ICA decoposition
+end
 
-
+events(participants_to_drop) = [] 
+to_reject = any([listBetas.participant] == participants_to_drop');
+listBetas(to_reject) = []
+%clear to_reject
 
 for s=1:length(listBetas)
     
@@ -97,6 +109,16 @@ for s=1:length(listBetas)
     
 end
 
+    
+
+
+for i = 2:length(fnames)
+    if size(betas.(fnames{i, 1}), 1) < participants_to_drop(end)
+        betas.(fnames{i, 1})(participants_to_drop(1:end-1), :,:,:) = []
+    else
+        betas.(fnames{i, 1})(participants_to_drop, :,:,:) = []
+    end
+end
 
 elec.CP1 = find(strcmp({chanlocs.labels}, 'CP1')==1)	;
 elec.CPz = find(strcmp({chanlocs.labels}, 'CPz')==1)	;
@@ -138,7 +160,7 @@ settings.perm = 10^4;
 settings.times_roi = times;
 settings.p_val = 0.05;
 
-settings.clean_participants = 1:length(listEEGData);
+settings.clean_participants = 1:length(listEEGData)-length(participants_to_drop);
 
 chan_hood = spatial_neighbors(chanlocs(1:64), 40);
 settings.freqs_roi = freqs>=8 & freqs<=14;
@@ -147,14 +169,14 @@ settings.times_roi = times> - 700 & times < 1000;
 
 for n=1:length(fnames)
     
-    betas.selected_electrodes.(fnames{n,1})(:, :, :) = permute(squeeze(mean(betas.(fnames{n,1})(:, electrodes, :,:), 2, 'omitnan')), [2 3 1]);
+    betas.selected_electrodes.(fnames{n,1})(:, :, :) = permute(squeeze(mean(betas.(fnames{n,1})(settings.clean_participants, electrodes, :,:), 2, 'omitnan')), [2 3 1]);
     betas.topoplot_all.(fnames{n,1}) = permute(squeeze(mean(betas.(fnames{n,1})(settings.clean_participants,:,settings.freqs_roi, settings.times_roi), 3, 'omitnan')), [2, 3, 1]);
     
     
 end
 
 m = size(betas.selected_electrodes.(fnames{1,1}), 1);
-n = size(settings.times_roi, 2);
+n = size(times, 2);
 b = size(betas.selected_electrodes.(fnames{1,1}), 3);
 zero = zeros(m, n, b); % matrix of zeros, same size as data times, freqs, participants
 
@@ -183,19 +205,24 @@ for n=1:length(fnames)
         
         n1=n1+1;
         last_val = k;
+        
+        betas.topoplot2.(fnames{n,1})(:, n1, :) = squeeze(mean(betas.topoplot_all.(fnames{n,1})(:, last_val:k, :), 2, 'omitnan'));
+
+        
     end
 end
+clear n1 last_val k
 for n=1:length(fnames)
     
     
     settings.timesx = times(settings.times_roi)
-    settings.times_new = settings.timesx(1:settings.step:k)
+    settings.times_new = settings.timesx(1:settings.step:end)
     
-    n_perm = 10000;
-    fwer = .05;
-    tail = 0;
+    settings.n_perm = 10000;
+    settings.fwer = .05;
+    settings.tail = 0;
     
-    [pval, t_orig, clust_info, seed_state, est_alpha]=clust_perm1(betas.topoplot.(fnames{n,1}),chan_hood,n_perm,fwer,tail);
+    [pval, t_orig, clust_info, seed_state, est_alpha]=clust_perm1(betas.topoplot.(fnames{n,1}),chan_hood,settings.n_perm,settings.fwer,settings.tail);
     data_topo.(fnames{n,1}).clust_info = clust_info;
     data_topo.(fnames{n,1}).pval = pval;
     data_topo.(fnames{n,1}).t_orig = t_orig;
@@ -215,7 +242,7 @@ m = length(freqs);
 
 beta = char(946);
 n = size(settings.times_roi, 2);
-czasy = string(int64(settings.times_roi()));
+czasy = string(int64(times));
 frekwencje = string(int64(freqs));
 mkdir(pathBETAS, '\plots\');
 savepath = [pathBETAS '\plots\']
@@ -333,12 +360,12 @@ for i=1:length(fnames_topo)
         for n=1:length(t.Children)
             t.Children(n).FontSize = 18;
             t.Children(n).TitleFontWeight = 'normal'
-            t.Children(n).CLim = [limits.down limits.up]
+            %t.Children(n).CLim = [limits.down limits.up]
         end
         
         t.Children(8).Visible = 'off'
        cbar;
-        ylim([limits.down limits.up]);
+        %ylim([limits.down limits.up]);
        t.Parent.Children(1).YLabel.String = [' beta vals']
         t.Parent.Children(1).YLabel.FontSize = 18
         t.Parent.Children(1).YAxisLocation = 'right'
