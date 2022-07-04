@@ -1,6 +1,6 @@
 root = 'D:\Drive\1 - Threshold\'
 pathEEGData = [root 'MARA\']
-pathBETAS = [ root '\tfdata\betas_intercept\']
+pathBETAS = [ root '\tfdata\betas_odwrotne\']
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
 settings.paradigm = 1;
@@ -23,19 +23,20 @@ catch
         fileEEGData=listEEGData(s).name;
         EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
         if settings.paradigm ==1
-            EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','off','invertepochs','off');
+            EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 2
-            
+            EEG = pop_selectevent( EEG, 'type',[61 62 63 64] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 3
-            
+            EEG = pop_selectevent( EEG, 'type',[101 100 106 107] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 4
-            
+            EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 5
             
         end
         chanlocs_all{s} = EEG.chanlocs;
         events{s} = EEG.event;
     end
+    save([root 'events.mat'], 'events');
 end
 clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
 
