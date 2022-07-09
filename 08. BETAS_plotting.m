@@ -1,18 +1,21 @@
-% general
-settings.paradigm = 3; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+% general settings
+settings.paradigm = 2; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
 settings.intercept = 1; % 1 for equation with intercept included; 0 for equation without intercept & interactions
 
-% topo
+% topoplot cluster permutation test settings
 settings.n_perm = 10000;
 settings.fwer = .001;
 settings.tail = 0;
 settings.oldway = 0; % 0 for 4 topoplots [-800 -600; -600 -400; -400 -200; -200 0]; 1 for multiple topoplots with averaged timewindow (specified by settings.step)
-% cluster
 
+% cluster permutation test settings
 settings.perm = 10000;
 settings.p_val = 0.001;
 
+% general plotting settings
+settings.limits.up = 0.06;
+settings.limits.down = -0.06;
 settings.prefix = 'conservative_'; % additional prefix for naming plots
 
 
@@ -92,7 +95,7 @@ clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
 for s=1:length(listBetas)
     
     file=listBetas(s).name;
-    
+    if  ~strcmp(file, 'betas.mat')
     B = regexp(file,'\d*','Match');
     if length(B) == 2
         participantID = str2num(B{1, 1});
@@ -111,7 +114,7 @@ for s=1:length(listBetas)
     
     
     listBetas(s).(currentFile) = 1;
-    
+    end
 end
 
 fnames = fieldnames(listBetas)
@@ -363,8 +366,6 @@ frekwencje(every_3d_element~=0) = " ";
 clear every_3d_element
 
 
-settings.limits.up = 0.06;
-settings.limits.down = -0.06;
 
 
 
@@ -372,6 +373,7 @@ settings.limits.down = -0.06;
 for i=1:length(fnames)
     clear temp* mean_data n m
     % preparing data to plot
+    
     m = length(freqs);
     n = size(times, 2);
     temp_data = betas.selected_electrodes.(fnames{i,1});
