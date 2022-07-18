@@ -22,7 +22,7 @@ elseif settings.paradigm == 4
     root = 'D:\Drive\4 - Faces\';
 elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
-elseif settings.paradigm == 7
+elseif settings.paradigm == 6
     root='C:\Users\user\Desktop\Kinga\';
 end
 
