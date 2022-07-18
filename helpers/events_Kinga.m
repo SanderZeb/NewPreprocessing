@@ -20,12 +20,11 @@ if sum(stair_idx) == 1
     end
 end
 clear i
-
-markers = [0 1 2 4 10 30 33 40 44 55 200 202 203 204 205 206 207 208 209]; % triggers that should be in the EEG event file
+markers = [0 1 2 3 4 10 30 33 40 44 55 200 202 203 204 205 206 207 208 209]; % triggers that should be in the EEG event file
 bad_idx = ~ismember([EEG.event.type], markers); % search for triggers not corresponding to the selected ones
 
 if sum(bad_idx) > 0
-    display(['found ' sum(bad_idx) ' triggers.'])
+    display(['found ' num2str(sum(bad_idx)) ' triggers.'])
     pause;
 end
     
