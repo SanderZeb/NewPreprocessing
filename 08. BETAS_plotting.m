@@ -1,5 +1,5 @@
 % general settings
-settings.paradigm = 2; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
 settings.intercept = 1; % 1 for equation with intercept included; 0 for equation without intercept & interactions
 
@@ -397,21 +397,22 @@ for i=1:length(fnames)
     imagesc(mean_data)
     %cb = colorbar;
     %cb.Limits = [settings.limits.down settings.limits.up]
-    title(['\fontsize{24} ' beta ' coefficient - ' fnames{i,1}]);
-    ylabel('\fontsize{20} Frequency [Hz]');
-    xlabel('\fontsize{20} Times [ms]');
+    title(['\fontsize{32} ' beta ' coefficient - ' fnames{i,1}]);
+    ylabel('\fontsize{28} Frequency [Hz]');
+    xlabel('\fontsize{28} Times [ms]');
     h_ax = gca;
     h_ax.Colormap = jet;
-    h_ax.FontSize = 16;
+    h_ax.FontSize = 24;
     h_ax.CLim = [settings.limits.down settings.limits.up]
     cb = cbar;
+    cb.Position = [0.91124072204465,0.11,0.024725137830286,0.815];
     ylim([settings.limits.down settings.limits.up]);
     cb.YLabel.String = ['\fontsize{20}' beta ' coefficient'];
-    cb.FontSize = 10;
+    cb.FontSize = 18;
     cb.YAxisLocation = 'right';
     cb.YLabel.VerticalAlignment = 'top';
     h_ax_c = axes('position', get(h_ax, 'position'), 'Color', 'none');
-    contour(h_ax_c, idx_clusters2, 'levels', 1,  'LineColor', 'r', 'LineWidth', 0.1);
+    contour(h_ax_c, idx_clusters2, 'levels', 1,  'LineColor', 'r', 'LineWidth', 1.5);
     set(h_ax_c, 'YDir','reverse') % for some reason, contour plots are reversed on Y axis and needs to be flipped
     h_ax_c.Color = 'none';
     h_ax_c.XTick = [];
