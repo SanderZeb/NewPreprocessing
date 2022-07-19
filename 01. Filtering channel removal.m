@@ -23,7 +23,7 @@ elseif settings.paradigm == 4
 elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
 elseif settings.paradigm == 6
-    root='C:\Users\user\Desktop\Kinga\';
+    root='D:\Drive\6 - Kinga\';
 end
 
 if settings.fileType == 0
@@ -52,6 +52,22 @@ for s=[1:participants]
             EEG = pop_loadset('filename',file,'filepath',pathLoadData);
         elseif settings.fileType == 1
             EEG = pop_biosig([pathLoadData '\' file], 'importevent','on');
+            
+            EEG=pop_chanedit(EEG, 'lookup','C:\Users\user\Desktop\eeglab2020_0\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp');
+            
+            
+            EEG=pop_chanedit(EEG, 'changefield',{65,'labels','HEOG'},'changefield',{65,'type','EOG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{66,'labels','HEOG2'},'changefield',{66,'type','EOG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{67,'labels','VEOG'},'changefield',{67,'type','EOG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{68,'labels','VEOG2'},'changefield',{68,'type','EOG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{69,'labels','Heartrate'},'changefield',{69,'type','ECG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{71,'labels','M1'},'changefield',{71,'type','EEG'},'rplurchanloc',1);
+            EEG=pop_chanedit(EEG, 'changefield',{72,'labels','M2'},'changefield',{72,'type','EEG'},'rplurchanloc',1);
+            EEG=pop_select(EEG, 'nochannel',{'EXG6', 'GSR1', 'GSR2', 'Erg1', 'Erg2', 'Resp', 'Plet', 'Temp'});
+            
+            
+            
+            EEG = pop_eegfiltnew(EEG, 'locutoff',0.5,'hicutoff',40,'plotfreqz',0);
         end
         addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers\')
         
@@ -67,24 +83,10 @@ for s=[1:participants]
         elseif settings.paradigm == 5
             EEG = events_scenes(EEG);
         elseif settings.paradigm == 6
-            EEG = events_Kinga(EEG);
+            %EEG = events_Kinga(EEG);
         end
         
-        EEG=pop_chanedit(EEG, 'lookup','C:\Users\user\Desktop\eeglab2020_0\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp');
         
-        
-        EEG=pop_chanedit(EEG, 'changefield',{65,'labels','HEOG'},'changefield',{65,'type','EOG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{66,'labels','HEOG2'},'changefield',{66,'type','EOG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{67,'labels','VEOG'},'changefield',{67,'type','EOG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{68,'labels','VEOG2'},'changefield',{68,'type','EOG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{69,'labels','Heartrate'},'changefield',{69,'type','ECG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{71,'labels','M1'},'changefield',{71,'type','EEG'},'rplurchanloc',1);
-        EEG=pop_chanedit(EEG, 'changefield',{72,'labels','M2'},'changefield',{72,'type','EEG'},'rplurchanloc',1);
-        EEG=pop_select(EEG, 'nochannel',{'EXG6', 'GSR1', 'GSR2', 'Erg1', 'Erg2', 'Resp', 'Plet', 'Temp'});
-        
-        
-        
-        EEG = pop_eegfiltnew(EEG, 'locutoff',0.5,'hicutoff',40,'plotfreqz',0);
         
         
         
