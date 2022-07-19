@@ -1,22 +1,22 @@
 % general settings
-settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+settings.paradigm = 4; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
-settings.intercept = 1; % 1 for equation with intercept included; 0 for equation without intercept & interactions
+settings.intercept = 0; % 1 for equation with intercept included; 0 for equation without intercept & interactions
 
 % topoplot cluster permutation test settings
 settings.n_perm = 10000;
-settings.fwer = .001;
+settings.fwer = .01;
 settings.tail = 0;
 settings.oldway = 0; % 0 for 4 topoplots [-800 -600; -600 -400; -400 -200; -200 0]; 1 for multiple topoplots with averaged timewindow (specified by settings.step)
 
 % cluster permutation test settings
 settings.perm = 10000;
-settings.p_val = 0.001;
+settings.p_val = 0.01;
 
 % general plotting settings
 settings.limits.up = 0.06;
 settings.limits.down = -0.06;
-settings.prefix = 'conservative_'; % additional prefix for naming plots
+settings.prefix = 'more_liberal_'; % additional prefix for naming plots
 
 
 if settings.paradigm == 1
@@ -439,7 +439,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 settings.timesx = settings.final_topo_times;
-s=get(0, 'ScreenSize');
 
 fnames_topo= fields(data_topo);
 
@@ -491,3 +490,6 @@ for i=1:length(fnames_topo)
     clear t mask_nonsignificant to_plot
     
 end
+
+
+clear t heads* to_plot temp ss m n h_ax h_ax_c cb
