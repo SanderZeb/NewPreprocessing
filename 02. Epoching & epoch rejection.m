@@ -60,9 +60,9 @@ for s=[1:participants]
             EEG = events_scenes(EEG);
             
         elseif settings.paradigm == 6
-            
+            addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers');
             [EEG, events_result] = events_Kinga(EEG);
-            
+            EEG = pop_epoch( EEG, { '55', '44', '33' }, [-0.2  1.4], 'epochinfo', 'yes'); 
         end
         
         

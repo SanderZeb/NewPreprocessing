@@ -37,7 +37,7 @@ if ~any(ismember([36, 38, 43, 100, 101, 106, 107], unique([EEG.event.type]))) % 
     for(n=1: length(EEG.event))
         if EEG.event(n).type == 10
             nn = n+1;
-            while (EEG.event(nn).type ~= [10 205 209])
+            while (EEG.event(nn).type ~= [10 200 201 202 203 204 205 206 207 208 209 244])
                 last_element = nn;
                 nn = nn+1;
             end
@@ -55,7 +55,7 @@ if ~any(ismember([36, 38, 43, 100, 101, 106, 107], unique([EEG.event.type]))) % 
                 slice(id_stim).stair = 0;
                 slice(id_stim).epoch = counter;
                 counter = counter+1;
-            else
+            elseif length(slice) >2 
                 id_stim = find(([slice.type] == 33) | ([slice.type] == 44) | ([slice.type] == 55));
                 id_resp = find(([slice.type] == 30) | ([slice.type] == 40));
                 slice(id_stim).trialType = slice(id_stim).type;
