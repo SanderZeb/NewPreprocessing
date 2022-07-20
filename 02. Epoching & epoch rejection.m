@@ -63,6 +63,7 @@ for s=[1:participants]
             addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers');
             [EEG, events_result] = events_Kinga(EEG);
             EEG = pop_epoch( EEG, { '55', '44', '33' }, [-0.2  1.4], 'epochinfo', 'yes'); 
+            %EEG = pop_selectevent( EEG, 'type',[55 44 33] ,'deleteevents','on','deleteepochs','on','invertepochs','off'); 
         end
         
         
