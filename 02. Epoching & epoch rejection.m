@@ -41,7 +41,7 @@ for s=[1:participants]
         
         
         
-      
+        
         
         
         if settings.paradigm == 1
@@ -60,8 +60,9 @@ for s=[1:participants]
             EEG = events_scenes(EEG);
             
         elseif settings.paradigm == 6
-            EEG = events_Kinga(EEG);
-            
+            if ~any(ismember([36, 38, 43, 100, 101, 106, 107], unique([EEG.event.type]))) % check for old triggers, if any found - ommit file
+                EEG = events_Kinga(EEG);
+            end
         end
         
         %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
@@ -91,6 +92,5 @@ for s=[1:participants]
         fprintf(fileID,'%s %s \n',list(s).name, '\n\n\n\n');
         fclose(fileID);
     end
-end   
-        
-        
+end
+
