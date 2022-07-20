@@ -60,31 +60,34 @@ for s=[1:participants]
             EEG = events_scenes(EEG);
             
         elseif settings.paradigm == 6
-            if ~any(ismember([36, 38, 43, 100, 101, 106, 107], unique([EEG.event.type]))) % check for old triggers, if any found - ommit file
-                EEG = events_Kinga(EEG);
-            end
+            
+            [EEG, events_result] = events_Kinga(EEG);
+            
         end
         
-        %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
-        epochs_vals = epoch_properties(EEG, 1:64)           % to run this line, you need to have FASTER plugin
-        addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
-        zscored_epoch_vals = zscore(epochs_vals)
-        to_reject = find(sum( abs(zscored_epoch_vals)>2 ,2))
         
-        reject_idx = zeros(size(EEG.data, 3), 1)
-        reject_idx(to_reject) = 1
-        EEG = pop_rejepoch( EEG, reject_idx ,0);
-        
-        
-        
-        EEG = pop_saveset( EEG, 'filename', file ,'filepath', pathSaveData);
-        save([pathSaveData '\additional_info\removed_trials' file '.mat'], 'to_reject')
-        
-        
-        fileID = fopen([root '\log_epoching.txt'],'a');
-        fprintf(fileID, 'success \n\n');
-        fprintf(fileID,'%s %s \n',list(s).name, '\n');
-        fclose(fileID);
+        if settings.paradigm == 6 & events_result == 1
+            %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
+            epochs_vals = epoch_properties(EEG, 1:64)           % to run this line, you need to have FASTER plugin
+            addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+            zscored_epoch_vals = zscore(epochs_vals)
+            to_reject = find(sum( abs(zscored_epoch_vals)>2 ,2))
+            
+            reject_idx = zeros(size(EEG.data, 3), 1)
+            reject_idx(to_reject) = 1
+            EEG = pop_rejepoch( EEG, reject_idx ,0);
+            
+            
+            
+            EEG = pop_saveset( EEG, 'filename', file ,'filepath', pathSaveData);
+            save([pathSaveData '\additional_info\removed_trials' file '.mat'], 'to_reject')
+            
+            
+            fileID = fopen([root '\log_epoching.txt'],'a');
+            fprintf(fileID, 'success \n\n');
+            fprintf(fileID,'%s %s \n',list(s).name, '\n');
+            fclose(fileID);
+        end
     catch
         warning('Something went wrong.');
         fileID = fopen([root '\log_epoching.txt'],'a');
