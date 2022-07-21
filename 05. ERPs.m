@@ -1,10 +1,28 @@
 close all
 clear all
+settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+
 
 addpath('C:\Users\user\Desktop\eeglab2022.0')
 addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
 addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
-root='D:\Drive\2 - Cue\';
+
+
+
+if settings.paradigm == 1
+    root = 'D:\Drive\1 - Threshold\';
+elseif settings.paradigm == 2
+    root = 'D:\Drive\2 - Cue\';
+elseif settings.paradigm == 3
+    root = 'D:\Drive\3 - Mask\';
+elseif settings.paradigm == 4
+    root = 'D:\Drive\4 - Faces\';
+elseif settings.paradigm == 5
+    root = 'D:\Drive\5 - Scenes\';
+elseif settings.paradigm == 6
+    root='D:\Drive\6 - Kinga\';
+end
+
 pathLoadData = [root '\ICA\']
 mkdir([root, '\ERP'])
 pathSaveData=[root '\ERP\'];=

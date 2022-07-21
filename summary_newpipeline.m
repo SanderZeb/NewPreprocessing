@@ -1,6 +1,32 @@
-pathLoadData_MARA='D:\Drive\2 - Cue\MARA\additional_info\';
-pathLoadData_chans='D:\Drive\2 - Cue\Preprocessed_new_pipeline\additional_info';
-pathLoadData_trials='D:\Drive\2 - Cue\Epoching_EpochRejection\additional_info';
+close all
+clear all
+settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+
+
+addpath('C:\Users\user\Desktop\eeglab2022.0')
+addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
+addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+
+
+
+if settings.paradigm == 1
+    root = 'D:\Drive\1 - Threshold\';
+elseif settings.paradigm == 2
+    root = 'D:\Drive\2 - Cue\';
+elseif settings.paradigm == 3
+    root = 'D:\Drive\3 - Mask\';
+elseif settings.paradigm == 4
+    root = 'D:\Drive\4 - Faces\';
+elseif settings.paradigm == 5
+    root = 'D:\Drive\5 - Scenes\';
+elseif settings.paradigm == 6
+    root='D:\Drive\6 - Kinga\';
+end
+
+
+pathLoadData_MARA=[root '\MARA\additional_info\'];
+pathLoadData_chans=[root '\Preprocessed_new_pipeline\additional_info'];
+pathLoadData_trials=[root '\Epoching_EpochRejection\additional_info'];
 list_MARA=dir([pathLoadData_MARA '\MARA_components*.mat'  ]);
 list_chans=dir([pathLoadData_chans '\removed_channels*.mat'  ]);
 list_trials=dir([pathLoadData_trials '\removed_trials*.mat'  ]);
