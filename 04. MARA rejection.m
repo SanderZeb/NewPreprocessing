@@ -1,12 +1,14 @@
-close all
-clear all
-settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+function runMARA(settings.paradigm, root)
 
-
-addpath('C:\Users\user\Desktop\eeglab2022.0')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
-
+% close all
+% clear all
+% settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+% 
+% 
+% addpath('C:\Users\user\Desktop\eeglab2022.0')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+% 
 
 
 if settings.paradigm == 1
@@ -58,4 +60,5 @@ for s=[1:participants]
         fprintf(fileID,'%s %s \n',list(s).name, '\n');
         fclose(fileID);
     end
+end
 end

@@ -1,27 +1,29 @@
-close all
-clear all
-settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+function runEpoching(settings.paradigm, root, settings.epochLim)
 
-
-addpath('C:\Users\user\Desktop\eeglab2022.0')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
-
-
-
-if settings.paradigm == 1
-    root = 'D:\Drive\1 - Threshold\';
-elseif settings.paradigm == 2
-    root = 'D:\Drive\2 - Cue\';
-elseif settings.paradigm == 3
-    root = 'D:\Drive\3 - Mask\';
-elseif settings.paradigm == 4
-    root = 'D:\Drive\4 - Faces\';
-elseif settings.paradigm == 5
-    root = 'D:\Drive\5 - Scenes\';
-elseif settings.paradigm == 6
-    root='D:\Drive\6 - Kinga\';
-end
+% close all
+% clear all
+% settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+% 
+% 
+% addpath('C:\Users\user\Desktop\eeglab2022.0')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+% 
+% 
+% 
+% if settings.paradigm == 1
+%     root = 'D:\Drive\1 - Threshold\';
+% elseif settings.paradigm == 2
+%     root = 'D:\Drive\2 - Cue\';
+% elseif settings.paradigm == 3
+%     root = 'D:\Drive\3 - Mask\';
+% elseif settings.paradigm == 4
+%     root = 'D:\Drive\4 - Faces\';
+% elseif settings.paradigm == 5
+%     root = 'D:\Drive\5 - Scenes\';
+% elseif settings.paradigm == 6
+%     root='D:\Drive\6 - Kinga\';
+% end
 
 pathLoadData = [root '\Preprocessed_new_pipeline\']
 mkdir([root, '\Epoching_EpochRejection'])
@@ -46,13 +48,13 @@ for s=[1:participants]
         
         if settings.paradigm == 1
             EEG = events_threshold(EEG);
-            EEG = pop_epoch( EEG, {'120', '121', '126', '127', '130', '131', '136', '137', '140', '141', '146', '147', '150', '151', '156', '157'}, [-2  2], 'epochinfo', 'yes');
+            EEG = pop_epoch( EEG, {'120', '121', '126', '127', '130', '131', '136', '137', '140', '141', '146', '147', '150', '151', '156', '157'}, settings.epochLim, 'epochinfo', 'yes');
         elseif settings.paradigm == 2
             EEG = events_cue(EEG);
-            EEG = pop_epoch( EEG, {'61', '62', '63', '64'}, [-2  2], 'epochinfo', 'yes');
+            EEG = pop_epoch( EEG, {'61', '62', '63', '64'}, settings.epochLim, 'epochinfo', 'yes');
         elseif settings.paradigm == 3
             EEG = events_mask(EEG);
-            EEG = pop_epoch( EEG, {'101', '100', '106', '107'}, [-2  2], 'epochinfo', 'yes');
+            EEG = pop_epoch( EEG, {'101', '100', '106', '107'}, settings.epochLim, 'epochinfo', 'yes');
         elseif settings.paradigm == 4
             EEG = events_faces(EEG);
             
@@ -62,7 +64,7 @@ for s=[1:participants]
         elseif settings.paradigm == 6
             addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers');
             [EEG, events_result] = events_Kinga(EEG);
-            EEG = pop_epoch( EEG, { '55', '44', '33' }, [-0.2  1.4], 'epochinfo', 'yes'); 
+            EEG = pop_epoch( EEG, { '55', '44', '33' }, settings.epochLim, 'epochinfo', 'yes'); 
             %EEG = pop_selectevent( EEG, 'type',[55 44 33] ,'deleteevents','on','deleteepochs','on','invertepochs','off'); 
         end
         
@@ -98,3 +100,4 @@ for s=[1:participants]
     end
 end
 
+end

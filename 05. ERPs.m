@@ -1,27 +1,29 @@
-close all
-clear all
-settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
-
-
-addpath('C:\Users\user\Desktop\eeglab2022.0')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
-
-
-
-if settings.paradigm == 1
-    root = 'D:\Drive\1 - Threshold\';
-elseif settings.paradigm == 2
-    root = 'D:\Drive\2 - Cue\';
-elseif settings.paradigm == 3
-    root = 'D:\Drive\3 - Mask\';
-elseif settings.paradigm == 4
-    root = 'D:\Drive\4 - Faces\';
-elseif settings.paradigm == 5
-    root = 'D:\Drive\5 - Scenes\';
-elseif settings.paradigm == 6
-    root='D:\Drive\6 - Kinga\';
-end
+function run_ERPs(settings.paradigm, root)
+settings.staticLims = 0
+% close all
+% clear all
+% settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+%
+%
+% addpath('C:\Users\user\Desktop\eeglab2022.0')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal\')
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+%
+%
+%
+% if settings.paradigm == 1
+%     root = 'D:\Drive\1 - Threshold\';
+% elseif settings.paradigm == 2
+%     root = 'D:\Drive\2 - Cue\';
+% elseif settings.paradigm == 3
+%     root = 'D:\Drive\3 - Mask\';
+% elseif settings.paradigm == 4
+%     root = 'D:\Drive\4 - Faces\';
+% elseif settings.paradigm == 5
+%     root = 'D:\Drive\5 - Scenes\';
+% elseif settings.paradigm == 6
+%     root='D:\Drive\6 - Kinga\';
+% end
 
 pathLoadData = [root '\MARA\']
 mkdir([root, '\ERP'])
@@ -109,12 +111,113 @@ save([pathSaveData '\ERP.mat'], 'ERPs')
 
 clear fnames
 fnames = fieldnames(ERPs)
+settings.xlimup = 1000
+settings.xlimdown = -200
+settings.ss=get(0, 'ScreenSize');
+n = 1
+for i = 1:length(fnames)
+    fnames2{i, :} = strsplit(fnames{i},'_')
+    fnames{i, 2} = fnames2{i,1}{1};
+    if size(fnames2{i,1}, 2) == 2
+        fnames{i, 3} = fnames2{i,1}{2};
+    elseif size(fnames2{i,1}, 2) == 3
+        fnames{i, 3} = fnames2{i,1}{3};
+    end
+    
+    
+    if i>1 & strcmp(fnames{i, 2}, fnames{i-1, 2})
+        fnames{i, 4} = n;
+    elseif i == 1
+        fnames{i, 4} = n;
+    elseif i>1 & ~strcmp(fnames{i, 2}, fnames{i-1, 2})
+        n=n+1;
+        fnames{i, 4} = n;
+    end
+    
+end
+
 
 for i = 1:length(fnames)
+    dynamic_max = max(max( squeeze(mean(ERPs.(fnames{i, 1}))) + (2*sem(ERPs.(fnames{i, 1})))));
+    dynamic_min = min(min( squeeze(mean(ERPs.(fnames{i, 1}))) - (2*sem(ERPs.(fnames{i, 1})))));
+    if exist('dynamic_max_all')
+        if dynamic_max > dynamic_max_all
+            dynamic_max_all = dynamic_max;
+        end
+    else
+        dynamic_max_all = dynamic_max;
+    end
+    if exist('dynamic_min_all')
+        if dynamic_min < dynamic_min_all
+            dynamic_min_all = dynamic_min;
+        end
+    else
+        dynamic_min_all = dynamic_min;
+    end
     
-    to_plot = squeeze(mean(ERPs.(fnames{i, 1}), 1))
+end
+
+
+
+
+
+
+if settings.staticLims == 1
+    settings.mlimitdown=-5
+    settings.mlimitup=5
     
-% .....
-%
-plot(to_plot);
+elseif settings.staticLims == 0
+    settings.mlimitdown=dynamic_min_all - (dynamic_min_all*0.2);
+    settings.mlimitup=dynamic_max_all + (dynamic_max_all*0.2);
+end
+
+settings.timesVec=EEG.times(times_ROI);
+
+
+for i = 1:length(unique([fnames{:, 4}]))
+    
+    
+    fnames_slice = {fnames{[([fnames{:, 4}] == i)], 1}}'
+    titles_slice = {fnames{[([fnames{:, 4}] == i)], 2}}'
+    conds_slice = {fnames{[([fnames{:, 4}] == i)], 3}}'
+    
+    iii = 1
+    for ii = 1: length(conds_slice)
+        if ii == 1
+            conds_slice2{ii} = conds_slice{ii}
+        else
+            iii = iii+3;
+            conds_slice2{iii} = conds_slice{ii};
+        end
+    end
+    
+    
+    for ii = 1:length(conds_slice2)
+        if isempty(conds_slice2{ii})
+            conds_slice2{ii} = ' ';
+        end
+    end
+    task_type = fnames{[fnames{:, 4}] == 2, 2}
+    
+    fig = figure('Position', [0 0 settings.ss(3) settings.ss(4)], 'Visible', 'off'); hold on;
+    
+    for n = 1:length(fnames_slice)
+        to_plot = squeeze(mean(ERPs.(fnames_slice{n, 1}), 1));
+        sem_1=to_plot - (2*sem(ERPs.(fnames_slice{n, 1})));
+        sem_2=to_plot + (2*sem(ERPs.(fnames_slice{n, 1})));
+        
+        plot(settings.timesVec,squeeze(to_plot), 'Color',[rand,rand,rand], 'LineWidth',1)
+        plot(settings.timesVec,squeeze(sem_1), '--k')
+        plot(settings.timesVec,squeeze(sem_2), '--k')
+    end
+    
+    legend(conds_slice);
+    xlim([settings.xlimdown settings.xlimup])
+    ylim([settings.mlimitdown settings.mlimitup])
+    title((titles_slice{1, 1}),'Fontsize',13)
+    saveas(fig,[pathSaveData titles_slice{1,1} num2str(channels) '.png']);
+    saveas(fig,[pathSaveData titles_slice{1,1} num2str(channels) '.fig']);
+    close all
+    clear fig conds_slice conds_slice2 titles_slice fnames_slice
+end
 end
