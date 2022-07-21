@@ -1,6 +1,6 @@
 close all
 clear all
-settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
 
 
 addpath('C:\Users\user\Desktop\eeglab2022.0')
@@ -23,9 +23,9 @@ elseif settings.paradigm == 6
     root='D:\Drive\6 - Kinga\';
 end
 
-pathLoadData = [root '\ICA\']
+pathLoadData = [root '\MARA\']
 mkdir([root, '\ERP'])
-pathSaveData=[root '\ERP\'];=
+pathSaveData=[root '\ERP\'];
 eeglab nogui
 list=dir([pathLoadData '\*.set'])
 participants = length(list)
@@ -35,7 +35,7 @@ for s=[1:participants]
     try
         file=list(s).name;
         EEG = pop_loadset('filename',file,'filepath',pathLoadData);
-
+        
         EEG = pop_rmbase( EEG, [-199    0]);
         
         elec.CP1 = find(strcmp({EEG.chanlocs.labels}, 'CP1')==1)	;
@@ -55,13 +55,13 @@ for s=[1:participants]
         elec.PO8 = find(strcmp({EEG.chanlocs.labels}, 'PO8')==1) ;
         elec.PO3 = find(strcmp({EEG.chanlocs.labels}, 'PO3')==1) ;
         elec.PO4 = find(strcmp({EEG.chanlocs.labels}, 'PO4')==1) ;
-        elec.VEOG = find(strcmp({EEG.chanlocs.labels}, 'VEOG')==1);		            
-        elec.HEOG = find(strcmp({EEG.chanlocs.labels}, 'HEOG')==1);		            
-        elec.VEOG2 = find(strcmp({EEG.chanlocs.labels}, 'VEOG2')==1);		     
-        elec.HEOG2 = find(strcmp({EEG.chanlocs.labels}, 'HEOG2')==1);		  
-        elec.M1 = find(strcmp({EEG.chanlocs.labels}, 'M1')==1);		              
-        elec.M2 = find(strcmp({EEG.chanlocs.labels}, 'M2')==1);		              
-        elec.Heartrate = find(strcmp({EEG.chanlocs.labels}, 'Heartrate')==1);		
+        elec.VEOG = find(strcmp({EEG.chanlocs.labels}, 'VEOG')==1);
+        elec.HEOG = find(strcmp({EEG.chanlocs.labels}, 'HEOG')==1);
+        elec.VEOG2 = find(strcmp({EEG.chanlocs.labels}, 'VEOG2')==1);
+        elec.HEOG2 = find(strcmp({EEG.chanlocs.labels}, 'HEOG2')==1);
+        elec.M1 = find(strcmp({EEG.chanlocs.labels}, 'M1')==1);
+        elec.M2 = find(strcmp({EEG.chanlocs.labels}, 'M2')==1);
+        elec.Heartrate = find(strcmp({EEG.chanlocs.labels}, 'Heartrate')==1);
         
         
         electrodes.to_excl = [elec.VEOG elec.HEOG elec.VEOG2 elec.M1 elec.M2 elec.Heartrate];
@@ -75,21 +75,46 @@ for s=[1:participants]
         times_ROI = [EEG.times] > -200 & [EEG.times] < 1200
         %events_idx = [EEG.event.type] == 61
         %ERPs.cond1(s, :,:) = squeeze(mean(EEG.data(channels, times_ROI, events_idx), 3))
-        ERPs.cond1(s, :) = squeeze(mean(mean(EEG.data(channels, times_ROI, [EEG.event.type] == 61), 3), 1));
-        ERPs.cond2(s, :) = squeeze(mean(mean(EEG.data(channels, times_ROI, [EEG.event.type] == 62), 3), 1));
-        ERPs.cond3(s, :) = squeeze(mean(mean(EEG.data(channels, times_ROI, [EEG.event.type] == 63), 3), 1));
-        ERPs.cond4(s, :) = squeeze(mean(mean(EEG.data(channels, times_ROI, [EEG.event.type] == 64), 3), 1));
         
         
+        fnames = fieldnames(EEG.event)
+        if settings.paradigm == 1
+            fnames([2 3 4 5 10]) = []; % get rid of latency, type, det & id response; epoch id
+        elseif settings.paradigm == 2
+            
+        elseif settings.paradigm == 3
+            
+        elseif settings.paradigm == 4
+            
+        elseif settings.paradigm == 5
+            
+        elseif settings.paradigm == 6
+            fnames([2 3]) = []; % get rid of latency & type
+            
+        end
+        
+        for n = 1:length(fnames)
+            event_values = unique([EEG.event.(fnames{n,1})]);
+            for nn = 1:length(event_values)
+                ERPs.([(fnames{n, 1}) '_' num2str(event_values(nn))])(s, :) = squeeze(mean(mean(EEG.data(channels, times_ROI, [EEG.event.(fnames{n,1})] == event_values(nn)), 3), 1));
+            end
+            clear event_values;
+        end
     catch
         warning(['Something went wrong with participant ' num2str(file)]);
     end
 end
-        
-        save([pathSaveData '\ERP.mat'], 'ERPs')
-        
-        
-        to_plot = squeeze(mean(ERPs.cond1, 1)) 
-        % .....
-        % 
-        
+
+save([pathSaveData '\ERP.mat'], 'ERPs')
+
+clear fnames
+fnames = fieldnames(ERPs)
+
+for i = 1:length(fnames)
+    
+    to_plot = squeeze(mean(ERPs.(fnames{i, 1}), 1))
+    
+% .....
+%
+plot(to_plot);
+end
