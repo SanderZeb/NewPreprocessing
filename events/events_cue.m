@@ -40,7 +40,7 @@ function EEG = events_cue(EEG)
                     end
                 end
                 for i=1:length(EEG.event)
-                    if(70>EEG.event(i).type && EEG.event(i).type>59)
+                    if(65>EEG.event(i).type && EEG.event(i).type>60)
                         if(~isempty(EEG.event(i+1).corr_corr))
                             EEG.event(i+1).cue = EEG.event(i).type
                         elseif(~isempty(EEG.event(i+2).corr_corr))
