@@ -70,18 +70,17 @@ for s=[1:participants]
         
             
         
-        if paradigm == 2 
+        if paradigm == 2
             EEG2 = pop_select(EEG, 'channel', {'HEOG', 'HEOG2'})
             epochs_vals = epoch_properties(EEG2, 1:2)
-            %addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+            addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
             zscored_epoch_vals = zscore(epochs_vals)
-            to_reject_heog = find(sum( abs(zscored_epoch_vals)>2 ,2))
+            to_reject = find(sum( abs(zscored_epoch_vals)>2 ,2))
             
-            reject_idx_heog = zeros(size(EEG.data, 3), 1)
-            reject_idx_heog(to_reject_heog) = 1
-            EEG = pop_rejepoch( EEG, reject_idx_heog ,0);
-            save([pathSaveData '\additional_info\removed_trials_heog_' file '.mat'], 'to_reject_heog')
-            clear EEG2
+            reject_idx = zeros(size(EEG.data, 3), 1)
+            reject_idx(to_reject) = 1
+            EEG = pop_rejepoch( EEG, reject_idx ,0);
+            
         end
         
             %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
