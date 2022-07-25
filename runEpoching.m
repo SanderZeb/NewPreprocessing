@@ -67,9 +67,7 @@ for s=[1:participants]
             EEG = pop_epoch( EEG, { '55', '44', '33' },  epochLim, 'epochinfo', 'yes'); 
             %EEG = pop_selectevent( EEG, 'type',[55 44 33] ,'deleteevents','on','deleteepochs','on','invertepochs','off'); 
         end
-        
-        
-        if  paradigm == 6 & events_result == 1
+
             %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
             epochs_vals = epoch_properties(EEG, 1:64)           % to run this line, you need to have FASTER plugin
             addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
@@ -90,7 +88,7 @@ for s=[1:participants]
             fprintf(fileID, 'success \n\n');
             fprintf(fileID,'%s %s \n',list(s).name, '\n');
             fclose(fileID);
-        end
+
 %     catch
 %         warning('Something went wrong.');
 %         fileID = fopen([root '\log_epoching.txt'],'a');
