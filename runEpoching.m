@@ -71,12 +71,12 @@ for s=[1:participants]
             
         
         if paradigm == 2 
-            EEG2 = pop_select(EEG, 'channel', {'HEOG', 'HEOG2'})
-            EEG2 = pop_select(EEG2, 'time', [0 0.5])
+            EEG2 = pop_select(EEG, 'channel', {'HEOG', 'HEOG2'}) 
+            EEG2 = pop_select(EEG2, 'time', [0 0.5]) % timewindow between cue onset and stimulus 
             epochs_vals = epoch_properties(EEG2, 1:2)
             %addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
             zscored_epoch_vals = zscore(epochs_vals)
-            to_reject_heog = find(sum( abs(zscored_epoch_vals)>2 ,2))
+            to_reject_heog = find(sum( abs(zscored_epoch_vals)>2 ,2)) % 
             
             reject_idx_heog = zeros(size(EEG.data, 3), 1)
             reject_idx_heog(to_reject_heog) = 1
