@@ -70,11 +70,11 @@ for s=[1:participants]
             
             EEG = pop_eegfiltnew(EEG, 'locutoff',0.5,'hicutoff',40,'plotfreqz',0);
         end
-        addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers\')
+        addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\events\')
         
         
         if  paradigm == 1
-            EEG = events_thresh(EEG);
+            EEG = events_threshold(EEG);
         elseif  paradigm == 2
             EEG = events_cue(EEG);
         elseif  paradigm == 3

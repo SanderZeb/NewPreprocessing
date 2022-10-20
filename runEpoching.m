@@ -47,19 +47,20 @@ for s=[1:participants]
         
         
         if  paradigm == 1
-            EEG = events_threshold(EEG);
+            %EEG = events_threshold(EEG);
             EEG = pop_epoch( EEG, {'120', '121', '126', '127', '130', '131', '136', '137', '140', '141', '146', '147', '150', '151', '156', '157'},  epochLim, 'epochinfo', 'yes');
         elseif  paradigm == 2
             EEG = events_cue(EEG);
             EEG = pop_epoch( EEG, {'61', '62', '63', '64'},  epochLim, 'epochinfo', 'yes');
         elseif  paradigm == 3
-            EEG = events_mask(EEG);
+            %EEG = events_mask(EEG);
             EEG = pop_epoch( EEG, {'101', '100', '106', '107'},  epochLim, 'epochinfo', 'yes');
         elseif  paradigm == 4
-            EEG = events_faces(EEG);
+            %EEG = events_faces(EEG);
+            EEG = pop_epoch( EEG, {'103', '104'},  epochLim, 'epochinfo', 'yes');
             
         elseif  paradigm == 5
-            EEG = events_scenes(EEG);
+            EEG = pop_epoch( EEG, {'20', '21', '120', '121', '40', '41', '140', '141', '80', '81', '180', '181', '30', '31', '130', '131', '50', '51', '150', '151', '90', '91', '190', '191'},  epochLim, 'epochinfo', 'yes');
             
         elseif  paradigm == 6
             addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\helpers');
@@ -87,7 +88,7 @@ for s=[1:participants]
         
             %epochs_vals = epoch_properties(EEG, 1:size(EEG.data, 1))           % to run this line, you need to have FASTER plugin
             epochs_vals = epoch_properties(EEG, 1:64)           % to run this line, you need to have FASTER plugin
-            %addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
+            addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats\')
             zscored_epoch_vals = zscore(epochs_vals)
             to_reject = find(sum( abs(zscored_epoch_vals)>2 ,2))
             

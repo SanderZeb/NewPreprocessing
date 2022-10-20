@@ -1,0 +1,17 @@
+root = 'C:\Users\user\Desktop\Nowy folder\participants';
+
+temp = dir;
+dirs = length(temp)-2;
+for i =1:(dirs)
+
+        pathLoadData= [root '\\' num2str(i) '\\'];
+        list=dir([pathLoadData '*.mat'  ]);
+
+        
+        for n = 1:length(list)
+            
+            data(i, n) = load([pathLoadData list(n).name]);
+            
+        end
+        
+end
