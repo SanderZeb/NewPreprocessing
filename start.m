@@ -16,9 +16,10 @@ elseif settings.paradigm == 5
 elseif settings.paradigm == 6
     root='D:\Drive\6 - Kinga\';
 end
-
+addpath([filePath(1:end-7)])
 runFiltering(settings.paradigm, settings.fileType, root, settings.sampling) 
-addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\events')
+filePath = matlab.desktop.editor.getActiveFilename;
+addpath([filePath(1:end-7) '\events'])
 runEpoching(settings.paradigm, root, settings.epochLim) 
 runICA(settings.paradigm, root)
 runMARA(settings.paradigm, root)
