@@ -25,7 +25,8 @@ from fooof.bands import Bands
 from fooof.plts.spectra import plot_spectra_shading
 
 #root = r'D:\Drive\1 - Threshold'
-root = r'D:\Drive\3 - Mask'
+#root = r'D:\Drive\3 - Mask'
+root = r'D:\Drive\4 - Faces'
 
 bands = Bands({'delta' : [1, 4],
                'theta' : [4, 8],

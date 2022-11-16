@@ -1,8 +1,19 @@
+settings.paradigm = 4;
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
 cd('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats')
 eeglab nogui
-root = 'D:\Drive\1 - Threshold\';
+if settings.paradigm == 1
+    root = 'D:\Drive\1 - Threshold\';
+elseif settings.paradigm == 2
+    root = 'D:\Drive\2 - Cue\';
+elseif settings.paradigm == 3
+    root = 'D:\Drive\3 - Mask\';
+elseif settings.paradigm == 4
+    root = 'D:\Drive\4 - Faces\';
+elseif settings.paradigm == 5
+    root = 'D:\Drive\5 - Scenes\';
+end
 pathLoadData= [root '\MARA\'];
 list=dir([pathLoadData '*.set'  ]);
 mkdir(root, 'pwelch');
