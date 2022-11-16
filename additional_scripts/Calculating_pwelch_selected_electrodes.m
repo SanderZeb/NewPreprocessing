@@ -2,7 +2,7 @@ addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
 cd('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats')
 eeglab nogui
-root = 'D:\Drive\1 - Threshold\';
+root = 'D:\Drive\5 - Scenes\';
 pathLoadData= [root '\MARA\'];
 list=dir([pathLoadData '*.set'  ]);
 mkdir(root, 'pwelch');
@@ -17,7 +17,7 @@ for s=[1:length(list)]
         
         
         
-
+chanlocs =  EEG.chanlocs;
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
 channels.M2 = find(strcmp({chanlocs.labels}, 'M2')==1);              	%INDEX CHANNEL
 channels.CP1 = find(strcmp({chanlocs.labels}, 'CP1')==1);
@@ -51,16 +51,16 @@ settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 c
 
 
         tic
-        for(i=1:64)
+        for(i=1:length(settings.selected_channels))
 			for(n=1:size(EEG.data, 3))
                 addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal');
-					[psds, freqs] = pwelch(EEG.data(i,256:512,n), [], [], [], EEG.srate);
+					[psds, freqs] = pwelch(EEG.data(settings.selected_channels(i),256:512,n), [], [], [], EEG.srate);
                     
                     % Transpose, to make inputs row vectors
                     %freqs = freqs';
                     psds = psds';
                     
-					data_psds(i, n, :) = psds;
+					data_psds(settings.selected_channels(i), n, :) = psds;
 					%data_freqs(i, n, :) = freqs;
 
 					clear freqs psds

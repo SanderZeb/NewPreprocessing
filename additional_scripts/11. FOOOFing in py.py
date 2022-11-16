@@ -22,12 +22,13 @@ import re
 
 
 #data_dict = mat73.loadmat(r'D:\Drive\1 - Threshold\pwelch\pwelch_participant_1.mat')
-freqs_dict = loadmat(r'D:\freqs.mat')
+#freqs_dict = loadmat(r'D:\freqs.mat') #whole epoch
+freqs_dict = loadmat(r'D:\freqs2.mat') #prestimulus part
 
 mypath = r'D:\Drive\1 - Threshold\pwelch'
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-savepath = r'C:\Users\user\Desktop\Nowy folder'    
+savepath = r'C:\Users\user\Desktop\Nowy folder2'    
 participants_path = os.path.join(savepath, 'participants')
 try:
     os.mkdir(participants_path)
@@ -51,12 +52,20 @@ for file in onlyfiles:
     except FileExistsError:
         pass 
     os.chdir(temp_path)
+    
+    
+    results = {"channel":[], "trial":[], "results":[]}
     for channel in range(channs):
         for trial in range(trials):
-            print(f'currently running for channel {channel} and trial {trial}')
-            current_psds = psds[channel, trial, :]
+            print(f'currently running for channel {channel} and trial {trial}');
+            current_psds = psds[channel, trial, :];
             fm = FOOOF();
-            fm.report(freqs, current_psds.T, [1, 30]);
-            fooof_results = fm.get_results()
-            fooof_results_dict = fooof_results._asdict()
-            savemat(f'{file}_chann_{channel}_trial_{trial}.mat', fooof_results_dict)
+            
+            fm.fit(freqs, current_psds.T, [1, 30]);
+            
+            results['channel'].append(channel)
+            results['trial'].append(trial)
+            results['results'].append(fm.get_results()._asdict())
+
+
+    savemat(f'{file}.mat', results)
