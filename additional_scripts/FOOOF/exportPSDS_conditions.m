@@ -1,4 +1,4 @@
-settings.paradigm = 4
+settings.paradigm = 5
 
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
@@ -107,39 +107,100 @@ for s=1:length(listdata)
     %FOOOFlist(s).trials_num = length(unique(temp.trial));
 end
 
-
-for s=[1:length(listdata)]
-    file=listdata(s).name;
-    temp = load([listdata(s).folder '\' file]);
-    data_psds = temp.data_psds;
-    participant_event = events{listdata(s).participant};
-    
-    idx_highpas = logical([participant_event.pas] >= 2);
-    idx_lowpas = logical([participant_event.pas] == 1);
-    if settings.paradigm == 1 | settings.paradigm == 4
-        idx_corr = logical([participant_event.identification2] ==1);
-        idx_inc = logical([participant_event.identification2] == 0);
-    elseif settings.paradigm == 3
-        idx_corr = logical([participant_event.corr_corr] ==1);
-        idx_inc = logical([participant_event.corr_corr] == 0);
+if settings.paradigm ~= 5
+    for s=[1:length(listdata)]
+        file=listdata(s).name;
+        temp = load([listdata(s).folder '\' file]);
+        data_psds = temp.data_psds;
+        participant_event = events{listdata(s).participant};
+        
+        idx_highpas = logical([participant_event.pas] >= 2);
+        idx_lowpas = logical([participant_event.pas] == 1);
+        if settings.paradigm == 1 | settings.paradigm == 4
+            idx_corr = logical([participant_event.identification2] ==1);
+            idx_inc = logical([participant_event.identification2] == 0);
+        elseif settings.paradigm == 3
+            idx_corr = logical([participant_event.corr_corr] ==1);
+            idx_inc = logical([participant_event.corr_corr] == 0);
+        end
+        
+        lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
+        highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
+        corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
+        inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
+        
+        
+        
+        save([pathSaveData '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        save([pathSaveData '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        save([pathSaveData '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        save([pathSaveData '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        
+        
+        clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
     end
     
-    lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
-    highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
-    corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
-    inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
     
-    
-    
-    save([pathSaveData '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
-    save([pathSaveData '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
-    save([pathSaveData '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
-    save([pathSaveData '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
-    
-    
-    clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
+elseif settings.paradigm == 5
+    mkdir([pathSaveData, '\obj\'])
+    mkdir([pathSaveData, '\bgr\'])
+    pathSaveData_obj = [pathSaveData '\obj\']
+    pathSaveData_bgr = [pathSaveData '\bgr\']
+    for s=[1:length(listdata)]
+        file=listdata(s).name;
+        temp = load([listdata(s).folder '\' file]);
+        data_psds = temp.data_psds;
+        participant_event = events{listdata(s).participant};
+        
+        clear idx_participant_event* participant_event_bgr participant_event_obj
+        for i=1:length(participant_event)
+        idx_participant_event_bgr(i) = strcmp(participant_event(i).task_type, 'background');
+        idx_participant_event_obj(i) = strcmp(participant_event(i).task_type, 'object');
+        end
+        participant_event_bgr = participant_event(idx_participant_event_bgr);
+        participant_event_obj = participant_event(idx_participant_event_obj);
+        
+        
+        %% object
+        idx_highpas = logical([participant_event_obj.pas] >= 2);
+        idx_lowpas = logical([participant_event_obj.pas] == 1);
+
+        idx_corr = logical([participant_event_obj.corrected_id] ==1);
+        idx_inc = logical([participant_event_obj.corrected_id] == 0);
+
+        
+        lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
+        highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
+        corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
+        inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
+        
+        
+        
+        save([pathSaveData_obj '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        save([pathSaveData_obj '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        save([pathSaveData_obj '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        save([pathSaveData_obj '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc
+        %% background
+        idx_highpas = logical([participant_event_bgr.pas] >= 2);
+        idx_lowpas = logical([participant_event_bgr.pas] == 1);
+
+        idx_corr = logical([participant_event_bgr.corrected_id] ==1);
+        idx_inc = logical([participant_event_bgr.corrected_id] == 0);
+
+        
+        lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
+        highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
+        corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
+        inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
+        
+        
+        
+        save([pathSaveData_bgr '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        save([pathSaveData_bgr '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        save([pathSaveData_bgr '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        save([pathSaveData_bgr '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
+    end
 end
-
-
-
 

@@ -1,4 +1,4 @@
-settings.paradigm = 1;
+settings.paradigm = 3;
 settings.confirmatory = 1; % 0 - normal timefrequency decomposition [morlet, 3-8Hz for 6-40Hz, without baseline]; 1 - prooving that the frequencies are not smeared from the poststimulus period to prestimulus period [Balestrieri method]
 
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'

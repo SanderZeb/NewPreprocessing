@@ -26,7 +26,9 @@ from fooof.plts.spectra import plot_spectra_shading
 
 #root = r'D:\Drive\1 - Threshold'
 #root = r'D:\Drive\3 - Mask'
-root = r'D:\Drive\4 - Faces'
+#root = r'D:\Drive\4 - Faces'
+root = r'D:\Drive\5 - Scenes'
+
 
 bands = Bands({'delta' : [1, 4],
                'theta' : [4, 8],
@@ -75,10 +77,16 @@ warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 #freqs_dict = loadmat(r'D:\freqs.mat') #whole epoch
 freqs_dict = loadmat(r'D:\freqs_mean.mat') #prestimulus part
 
-pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
-pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
-pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
-pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
+# pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
+# pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
+# pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
+# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
+
+
+pathdata_corrid = rf'{root}\pwelch\pwelch_result\bgr\corrid'
+pathdata_incid = rf'{root}\pwelch\pwelch_result\bgr\incid'
+pathdata_highpas = rf'{root}\pwelch\pwelch_result\bgr\highpas'
+pathdata_lowpas = rf'{root}\pwelch\pwelch_result\bgr\lowpas'
 
 
 onlyfiles_corrid = [f for f in listdir(pathdata_corrid) if isfile(join(pathdata_corrid, f))]
@@ -132,7 +140,7 @@ upper_freqs = 40
 min_peak_height = 0.0
 peak_threshold= 2.0
 aperiodic_mode = 'fixed'
-threshold_to_drop = 0.05
+threshold_to_drop = 0.1
 peak_width_limits = (1.0, 12.0)
 
 import pandas as pd
@@ -148,27 +156,24 @@ for file in onlyfiles_corrid:
     fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
     fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
     list_corrid.append(fm);
-    df_corrid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_}
-    savemat(rf'{root}\pwelch\pwelch_result\corrid\fooof\{file}', df_corrid)
+    if fm.peak_params_.size == 0:
+        df_corrid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_corrid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_corrid}\fooof\{file}', df_corrid)
 fGroup_corrid = combine_fooofs(list_corrid)    
 fGroup_corrid.fit()
 fGroup_corrid.drop(fGroup_corrid.get_params('error') > threshold_to_drop)
 print('number of dropped models: ', fGroup_corrid.n_null_)
 fGroup_corrid.plot()
-
-
-# # Extract a model parameter with `get_params`
-# err = fGroup_corrid.get_params('error')
-
-# # Extract parameters, indicating sub-selections of parameters
-# exp = fGroup_corrid.get_params('aperiodic_params', 'exponent')
-# cfs = fGroup_corrid.get_params('peak_params', 'CF')
-
-# # Print out a custom parameter report
-# template = ("With an error level of {error:1.2f}, FOOOF fit an exponent "
-#             "of {exponent:1.2f} and peaks of {cfs:s} Hz.")
-# print(template.format(error=err, exponent=exp,
-#                       cfs=' & '.join(map(str, [round(cf, 2) for cf in cfs]))))
 
 
 
@@ -184,8 +189,19 @@ for file in onlyfiles_incid:
     fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
     fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
     list_incid.append(fm);
-    df_incid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_}
-    savemat(rf'{root}\pwelch\pwelch_result\incid\fooof\{file}', df_incid)
+    if fm.peak_params_.size == 0:
+        df_incid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_incid = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_incid}\fooof\{file}', df_incid)
     
     
     
@@ -207,8 +223,19 @@ for file in onlyfiles_highpas:
     fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
     fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
     list_highpas.append(fm);
-    df_highpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum , 'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_}
-    savemat(rf'{root}\pwelch\pwelch_result\highpas\fooof\{file}', df_highpas)
+    if fm.peak_params_.size == 0:
+        df_highpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_highpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_highpas}\fooof\{file}', df_highpas)
 fGroup_highpas = combine_fooofs(list_highpas)      
 fGroup_highpas.fit()
 fGroup_highpas.drop(fGroup_highpas.get_params('error') > threshold_to_drop)
@@ -226,8 +253,19 @@ for file in onlyfiles_lowpas:
     fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
     fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
     list_lowpas.append(fm);
-    df_lowpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_}
-    savemat(rf'{root}\pwelch\pwelch_result\lowpas\fooof\{file}', df_lowpas)
+    if fm.peak_params_.size == 0:
+        df_lowpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_lowpas = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_lowpas}\fooof\{file}', df_lowpas)
 fGroup_lowpas = combine_fooofs(list_lowpas)      
 fGroup_lowpas.fit()
 fGroup_lowpas.drop(fGroup_lowpas.get_params('error') > threshold_to_drop)
@@ -238,6 +276,20 @@ fGroup_lowpas.plot()
 
 
 
+
+
+# # Extract a model parameter with `get_params`
+# err = fGroup_corrid.get_params('error')
+
+# # Extract parameters, indicating sub-selections of parameters
+# exp = fGroup_corrid.get_params('aperiodic_params', 'exponent')
+# cfs = fGroup_corrid.get_params('peak_params', 'CF')
+
+# # Print out a custom parameter report
+# template = ("With an error level of {error:1.2f}, FOOOF fit an exponent "
+#             "of {exponent:1.2f} and peaks of {cfs:s} Hz.")
+# print(template.format(error=err, exponent=exp,
+#                       cfs=' & '.join(map(str, [round(cf, 2) for cf in cfs]))))
 
 
 import matplotlib.pyplot as plt

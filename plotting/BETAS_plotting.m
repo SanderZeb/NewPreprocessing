@@ -1,7 +1,8 @@
 % general settings
-settings.paradigm = 4; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
-settings.inverted = 0; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
-settings.intercept = 1; % 1 for equation with intercept included; 0 for equation without intercept & interactions
+settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
+settings.intercept = 0; % 1 for equation with intercept included; 0 for equation without intercept & interactions
+settings.confirmatory = 1;
 
 % topoplot cluster permutation test settings
 settings.n_perm = 10000;
@@ -30,26 +31,30 @@ elseif settings.paradigm == 4
 elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
 end
-pathTFData = [root '\tfdata\']
+if settings.confirmatory == 0
+    pathTFData = [root '\tfdata\']
+elseif settings.confirmatory == 1
+    pathTFData = [root '\tfdata_confirmatory\']
+end
 pathEEGData = [root '\MARA\']
 if settings.inverted== 1 & settings.intercept== 1
     mkdir(pathTFData, 'betas_odwrotne_intercept');
-    pathBETAS = [root '\tfdata\betas_odwrotne_intercept\']
+    pathBETAS = [pathTFData '\betas_odwrotne_intercept\']
     mkdir(pathBETAS, '\plots_odwrotne_intercept\');
     savepath = [pathBETAS '\plots_odwrotne_intercept\']
 elseif settings.inverted== 1 & settings.intercept== 0
     mkdir(pathTFData, 'betas_odwrotne');
-    pathBETAS = [root '\tfdata\betas_odwrotne\']
+    pathBETAS = [pathTFData '\betas_odwrotne\']
     mkdir(pathBETAS, '\plots_odwrotne\');
     savepath = [pathBETAS '\plots_odwrotne\']
 elseif settings.inverted == 0 & settings.intercept== 1
     mkdir(pathTFData, 'betas_intercept');
-    pathBETAS = [root '\tfdata\betas_intercept\']
+    pathBETAS = [pathTFData '\betas_intercept\']
     mkdir(pathBETAS, '\plots_intercept\');
     savepath = [pathBETAS '\plots_intercept\']
 elseif settings.inverted== 0 & settings.intercept== 0
     mkdir(pathTFData, 'betas');
-    pathBETAS = [root '\tfdata\betas\']
+    pathBETAS = [pathTFData '\\betas\']
     mkdir(pathBETAS, '\plots\');
     savepath = [pathBETAS '\plots\']
 end

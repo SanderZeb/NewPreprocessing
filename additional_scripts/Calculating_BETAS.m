@@ -1,7 +1,8 @@
-settings.paradigm = 4;
-settings.inverted = 0;
-settings.intercept = 1;
-% 
+settings.paradigm = 1;
+settings.inverted = 1;
+settings.intercept = 0;
+settings.confirmatory = 1;
+%
 % if n ==1
 %     settings.inverted = 1;
 %     settings.intercept = 0;
@@ -27,20 +28,24 @@ elseif settings.paradigm == 4
 elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
 end
-pathTFData = [root '\tfdata\']
+if settings.confirmatory == 0
+    pathTFData = [root '\tfdata\']
+elseif settings.confirmatory == 1
+    pathTFData = [root '\tfdata_confirmatory\']
+end
 pathEEGData = [root '\MARA\']
 if settings.inverted== 1 & settings.intercept== 1
     mkdir(pathTFData, 'betas_odwrotne_intercept');
-    pathBETAS = [root '\tfdata\betas_odwrotne_intercept\']
+    pathBETAS = [pathTFData '\betas_odwrotne_intercept\']
 elseif settings.inverted== 1 & settings.intercept== 0
     mkdir(pathTFData, 'betas_odwrotne');
-    pathBETAS = [root '\tfdata\betas_odwrotne\']
+    pathBETAS = [pathTFData '\betas_odwrotne\']
 elseif settings.inverted == 0 & settings.intercept== 1
     mkdir(pathTFData, 'betas_intercept');
-    pathBETAS = [root '\tfdata\betas_intercept\']
+    pathBETAS = [pathTFData '\betas_intercept\']
 elseif settings.inverted== 0 & settings.intercept== 0
     mkdir(pathTFData, 'betas');
-    pathBETAS = [root '\tfdata\betas\']
+    pathBETAS = [pathTFData '\betas\']
 end
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
@@ -109,8 +114,8 @@ for s=1:length(listTFData)
     x = rmfield(x, 'latency');
     x = rmfield(x, 'urevent');
     x = rmfield(x, 'epoch');
-
-        
+    
+    
     x = rmfield(x, 'identification');
     if settings.paradigm == 1 | settings.paradigm == 2
         x = rmfield(x, 'detection');
@@ -128,12 +133,12 @@ for s=1:length(listTFData)
     if sum(sum(empty_event)) > 0
         empty_event = squeeze(empty_event)';
         [empty_event_r, empty_event_c] = find(empty_event==1);
-%         if length(unique(empty_event_r)) == 1
-%             x([unique(empty_event_r)]).pas = 1;
-%             x([unique(empty_event_r)]).detection2 = 0;
-%             x([unique(empty_event_r)]).identification2 = 0;
-%             
-%         end
+        %         if length(unique(empty_event_r)) == 1
+        %             x([unique(empty_event_r)]).pas = 1;
+        %             x([unique(empty_event_r)]).detection2 = 0;
+        %             x([unique(empty_event_r)]).identification2 = 0;
+        %
+        %         end
         id_to_drop = unique(empty_event_r)
     else
         id_to_drop = [];
@@ -167,7 +172,7 @@ for s=1:length(listTFData)
             x_standarized(:, 4) = x_standarized(:, 2).*x_standarized(:, 3); % interaction  PAS X IDENTIFICATION
             
             
-   
+            
             
         end
         
