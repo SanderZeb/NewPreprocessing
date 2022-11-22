@@ -26,8 +26,8 @@ from fooof.plts.spectra import plot_spectra_shading
 
 #root = r'D:\Drive\1 - Threshold'
 #root = r'D:\Drive\3 - Mask'
-#root = r'D:\Drive\4 - Faces'
-root = r'D:\Drive\5 - Scenes'
+root = r'D:\Drive\4 - Faces'
+#root = r'D:\Drive\5 - Scenes'
 
 
 bands = Bands({'delta' : [1, 4],
@@ -77,16 +77,16 @@ warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 #freqs_dict = loadmat(r'D:\freqs.mat') #whole epoch
 freqs_dict = loadmat(r'D:\freqs_mean.mat') #prestimulus part
 
-# pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
-# pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
-# pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
-# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
+pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
+pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
+pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
+pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
 
 
-pathdata_corrid = rf'{root}\pwelch\pwelch_result\bgr\corrid'
-pathdata_incid = rf'{root}\pwelch\pwelch_result\bgr\incid'
-pathdata_highpas = rf'{root}\pwelch\pwelch_result\bgr\highpas'
-pathdata_lowpas = rf'{root}\pwelch\pwelch_result\bgr\lowpas'
+# pathdata_corrid = rf'{root}\pwelch\pwelch_result\bgr\corrid'
+# pathdata_incid = rf'{root}\pwelch\pwelch_result\bgr\incid'
+# pathdata_highpas = rf'{root}\pwelch\pwelch_result\bgr\highpas'
+# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\bgr\lowpas'
 
 
 onlyfiles_corrid = [f for f in listdir(pathdata_corrid) if isfile(join(pathdata_corrid, f))]

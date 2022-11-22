@@ -62,6 +62,7 @@ elseif settings.confirmatory == 1
         EEG = pop_select(EEG_combined, 'time', [EEG.xmin 0.500]);
         
         tic
+       % [ersp,itc,powbase,times,freqs,erspboot,itcboot, tfdata(:,:,:)] = newtimef(EEG.data(i,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
         for(i=1:64)
             [~, ~, ~, ~, ~, ~, ~, tfdata(:,:,:)] = newtimef(EEG.data(i,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
             save([  pathSaveData '/tfdata_chan_' num2str(i) '_participant_' num2str(s)], 'tfdata', '-v7.3')  ;

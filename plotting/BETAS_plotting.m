@@ -1,23 +1,23 @@
 % general settings
-settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+settings.paradigm = 3; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
 settings.intercept = 0; % 1 for equation with intercept included; 0 for equation without intercept & interactions
 settings.confirmatory = 1;
 
 % topoplot cluster permutation test settings
-settings.n_perm = 10000;
+settings.n_perm = 1000;
 settings.fwer = .01;
 settings.tail = 0;
 settings.oldway = 0; % 0 for 4 topoplots [-800 -600; -600 -400; -400 -200; -200 0]; 1 for multiple topoplots with averaged timewindow (specified by settings.step)
 
 % cluster permutation test settings
-settings.perm = 10000;
+settings.perm = 1000;
 settings.p_val = 0.01;
 
 % general plotting settings
 settings.limits.up = 0.06;
 settings.limits.down = -0.06;
-settings.prefix = 'more_liberal_'; % additional prefix for naming plots
+settings.prefix = ''; % additional prefix for naming plots
 
 
 if settings.paradigm == 1
@@ -102,24 +102,24 @@ for s=1:length(listBetas)
     
     file=listBetas(s).name;
     if  ~strcmp(file, 'betas.mat')
-    B = regexp(file,'\d*','Match');
-    if length(B) == 2
-        participantID = str2num(B{1, 1});
-        channel =  str2num(B{1, 2});
-    elseif length(B) == 3
-        participantID = str2num(B{1, 1});
-        channel =  str2num(B{1, 3});
-    end
-    
-    listBetas(s).participant = participantID;
-    listBetas(s).channel = channel;
-    
-    C = regexp(file,'s_\w*_chann','Match');
-    currentFile = C{1,1}(3:end-6);
-    
-    
-    
-    listBetas(s).(currentFile) = 1;
+        B = regexp(file,'\d*','Match');
+        if length(B) == 2
+            participantID = str2num(B{1, 1});
+            channel =  str2num(B{1, 2});
+        elseif length(B) == 3
+            participantID = str2num(B{1, 1});
+            channel =  str2num(B{1, 3});
+        end
+        
+        listBetas(s).participant = participantID;
+        listBetas(s).channel = channel;
+        
+        C = regexp(file,'s_\w*_chann','Match');
+        currentFile = C{1,1}(3:end-6);
+        
+        
+        
+        listBetas(s).(currentFile) = 1;
     end
 end
 
@@ -129,7 +129,22 @@ fnames(1:8) = []
 
 EEG = pop_loadset('filename',listEEGData(1).name,'filepath',pathEEGData);
 chanlocs = EEG.chanlocs;
-[~,~,~,times,freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
+if settings.confirmatory == 0
+    [~,~,~,times,freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
+end
+if settings.confirmatory == 1
+    EEG = pop_select(EEG, 'channel', [1:64]);
+    EEG2 = pop_select(EEG, 'time', [EEG.xmin 0])
+    EEG_flipped = flip(EEG2.data, 2);
+    
+    
+    EEG_combined= EEG;
+    EEG_combined.data(:, 1:512, :) = EEG2.data;
+    EEG_combined.data(:, 513:1024, :) = EEG_flipped;
+    
+    EEG = pop_select(EEG_combined, 'time', [EEG.xmin 0.500]);
+    [~,~,~,times,freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
+end
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
@@ -216,10 +231,15 @@ end
 
 
 
+% 
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal');
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats');
+% addpath('C:\Program Files\MATLAB\R2019b\toolbox\images\images');
+% addpath 'C:\Users\user\Documents\GitHub\permutation calculation'; % folder with permutest.m
 
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\signal\signal');
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats');
-addpath('C:\Program Files\MATLAB\R2019b\toolbox\images\images');
+addpath('C:\Program Files\MATLAB\R2022b\toolbox\signal\signal');
+addpath('C:\Program Files\MATLAB\R2022b\toolbox\stats\stats');
+addpath('C:\Program Files\MATLAB\R2022b\toolbox\images\images');
 addpath 'C:\Users\user\Documents\GitHub\permutation calculation'; % folder with permutest.m
 
 
@@ -341,6 +361,7 @@ n = size(times, 2);
 
 beta = char(946);
 frekwencje = string(int64(freqs));
+if settings.confirmatory == 0
 try
     
     load('C:\Users\user\Desktop\edited czasy decimal.mat'); % manually edited version of ([round(settings.times_roi,-1)])
@@ -359,6 +380,23 @@ czasy3 = string(czasy2);
 czasy3(czasy2==0) = " ";
 czasy = czasy3;
 czasy(100) = "0";
+
+elseif settings.confirmatory == 1
+    load("D:\times_mirrored.mat");
+    czasy = ([round(times,-1)]);
+    for i = 1:length(czasy)
+        if mod(czasy(i), 200) == 0 % selecting labels for X axis - every 200 ms;
+            czasy2(i) = czasy(i);
+        else
+            czasy2(i) = 0;
+        end
+    end
+    czasy3 = string(czasy2);
+    czasy3(czasy2==0) = " ";
+    czasy = czasy3;
+    
+end
+
 
 % every_5th_element = [1:length(settings.times_roi)];
 % every_5th_element(mod(every_5th_element,5) == 0) = 0;
@@ -428,8 +466,12 @@ for i=1:length(fnames)
     h_ax.YTick = 1:length(frekwencje);
     h_ax.YTickLabel = frekwencje;
     h_ax.TickLength = [0, 0]; % again, for some reason, figure has markers on edges.
-    xline(100.5)
-    %
+    if settings.confirmatory == 0
+        xline(100.5)
+    elseif settings.confirmatory == 1
+        xline(177.5)
+    end
+
     
     saveas(fig,[savepath settings.prefix fnames{i,1} '.png']);
     saveas(fig,[savepath settings.prefix fnames{i,1} '.fig']);
