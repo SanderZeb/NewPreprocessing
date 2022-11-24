@@ -6,17 +6,17 @@ addpath('C:\Users\user\Documents\Violinplot-Matlab-master')
 
 
 
-results_exp3(133) = []
+results_exp3(133,:) = []
 
 
-central_value.HighPAS_exp1 = results_exp1.central_freq_highpas;
-central_value.LowPAS_exp1 = results_exp1.central_freq_lowpas;
-central_value.Correct_exp1 = results_exp1.central_freq_corrid;
-central_value.Incorrect_exp1 = results_exp1.central_freq_incid;
-central_value.HighPAS_exp3 = results_exp3.central_freq_highpas;
-central_value.LowPAS_exp3 = results_exp3.central_freq_lowpas;
-central_value.Correct_exp3 = results_exp3.central_freq_corrid;
-central_value.Incorrect_exp3 = results_exp3.central_freq_incid;
+central_value.a1_HighPAS_exp1 = results_exp1.central_freq_highpas;
+central_value.a2_LowPAS_exp1 = results_exp1.central_freq_lowpas;
+central_value.a5_Correct_exp1 = results_exp1.central_freq_corrid;
+central_value.a6_Incorrect_exp1 = results_exp1.central_freq_incid;
+central_value.a3_HighPAS_exp3 = results_exp3.central_freq_highpas;
+central_value.a4_LowPAS_exp3 = results_exp3.central_freq_lowpas;
+central_value.a7_Correct_exp3 = results_exp3.central_freq_corrid;
+central_value.a8_Incorrect_exp3 = results_exp3.central_freq_incid;
 
 violinplot(central_value)
 

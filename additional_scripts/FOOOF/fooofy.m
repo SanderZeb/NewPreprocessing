@@ -1,8 +1,8 @@
 
 clear all
 %start = 'D:\Drive\1 - Threshold\pwelch\pwelch_result';
-%start = 'D:\Drive\3 - Mask\pwelch\pwelch_result';
-start = 'D:\Drive\4 - Faces\pwelch\pwelch_result';
+start = 'D:\Drive\3 - Mask\pwelch\pwelch_result';
+%start = 'D:\Drive\4 - Faces\pwelch\pwelch_result';
 %start = 'D:\Drive\5 - Scenes\pwelch\pwelch_result\bgr\';
 %start = 'D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\';
 
@@ -223,9 +223,9 @@ writematrix(power_freq, 'power_freq.csv');
 clear bandwith_freq
 bandwith_freq(1, 1:participants) = [1:participants]
 bandwith_freq(2,:) = data_highpas_model_fit(:, 5);
-bandwith_freq(3,:) = data_highpas_model_fit(:, 5);
-bandwith_freq(4,:) = data_highpas_model_fit(:, 5);
-bandwith_freq(5,:) = data_highpas_model_fit(:, 5);
+bandwith_freq(3,:) = data_lowpas_model_fit(:, 5);
+bandwith_freq(4,:) = data_corrid_model_fit(:, 5);
+bandwith_freq(5,:) = data_incid_model_fit(:, 5);
 bandwith_freq = bandwith_freq.'
 writematrix(bandwith_freq, 'bandwith_freq.csv');
 

@@ -162,6 +162,9 @@ for i = 1:length(pairs)
 end
 
 
+histogram(comparison)
+
+
 figure; hold on
 plot(mean(comparison.exp1_highpas, 1))
 plot(mean(comparison.exp3_highpas, 1))
