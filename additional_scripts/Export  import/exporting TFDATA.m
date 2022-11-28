@@ -1,4 +1,4 @@
-settings.paradigm = 5;
+settings.paradigm = 4;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
 elseif settings.paradigm == 2
@@ -27,8 +27,8 @@ chanlocs = EEG.chanlocs;
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
-settings.times_roi = times >= -650 & times <= -50;
-settings.freqs_roi = freqs>= 8 & freqs <= 14;
+settings.times_roi = times >= -800 & times <= 0;
+settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
 channels.M2 = find(strcmp({chanlocs.labels}, 'M2')==1);              	%INDEX CHANNEL
@@ -81,7 +81,7 @@ catch
             EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 5
             
-        end
+        end     
         chanlocs_all{s} = EEG.chanlocs;
         events{s} = EEG.event;
     end
@@ -135,7 +135,7 @@ for s=1:length(new_list)
         %participant_event_clean = rmfield(participant_event_clean, 'type');
         participant_event_clean = rmfield(participant_event_clean, 'latency');
         participant_event_clean = rmfield(participant_event_clean, 'urevent');
-        participant_event_clean = rmfield(participant_event_clean, 'epoch');
+        %participant_event_clean = rmfield(participant_event_clean, 'epoch');
         try
             participant_event_clean = rmfield(participant_event_clean, 'duration');
         catch
@@ -224,5 +224,14 @@ end
 
 
 writetable(struct2table(all), [pathTFData '\all - alpha power.csv'])
+if settings.paradigm == 1
+    writetable(struct2table(all), ['D:\export\exp1_threshold_alpha.csv'])
+elseif settings.paradigm == 2
+    writetable(struct2table(all), ['D:\export\exp2_cue_alpha.csv'])
+elseif settings.paradigm == 3
+    writetable(struct2table(all), ['D:\export\exp3_mask_alpha.csv'])
+elseif settings.paradigm == 4
+    writetable(struct2table(all), ['D:\export\exp4_faces_alpha.csv'])
+end
 save([pathTFData '\all - alpha power.mat'],'all')
 

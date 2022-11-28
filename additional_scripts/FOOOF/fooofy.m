@@ -1,10 +1,10 @@
 
 clear all
 %start = 'D:\Drive\1 - Threshold\pwelch\pwelch_result';
-start = 'D:\Drive\3 - Mask\pwelch\pwelch_result';
+%start = 'D:\Drive\3 - Mask\pwelch\pwelch_result';
 %start = 'D:\Drive\4 - Faces\pwelch\pwelch_result';
 %start = 'D:\Drive\5 - Scenes\pwelch\pwelch_result\bgr\';
-%start = 'D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\';
+start = 'D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\';
 
 
 root = [ start '\corrid\fooof']

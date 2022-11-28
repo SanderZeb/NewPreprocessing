@@ -32,8 +32,10 @@ clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST current
 close all
 
 %settings.times_roi = times >= -650 & times <= -50;
-settings.times_roi = times >= -1250 & times <= -700;
-settings.freqs_roi = freqs>= 8 & freqs <= 14;
+%settings.times_roi = times >= -1250 & times <= -700;
+%settings.freqs_roi = freqs>= 8 & freqs <= 14;
+settings.times_roi = times >= -800 & times <= 0;
+settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
 channels.M2 = find(strcmp({chanlocs.labels}, 'M2')==1);              	%INDEX CHANNEL
@@ -133,25 +135,6 @@ for i = 1:length(events)
     events2{i} = participant_event;
     %test(i).eventssss = participant_event(end).epoch;;
 end
-% 
-% for i = 1:length(events)
-% participant_event = events{1, i}
-% 
-% test(i).eventbefore = participant_event(end).epoch;
-% test(i).eventsum = length(participant_event);
-% end
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% testlisty = listTFData([listTFData.channel] == 1);
-% for i = 1:length(testlisty)
-%    temp = load([pathTFData testlisty(i).name]);
-%    test(i).tfdata = size(temp.tfdata, 3);
-% end
 
 idx_selected_channels = any([listTFData.channel] == settings.selected_channels.')
 new_list = listTFData(idx_selected_channels)
@@ -254,6 +237,8 @@ for s=1:length(new_list)
 
 
 
-writetable(struct2table(all), [pathTFData '\all - alpha power_earlier_timewindow.csv'])
-save([pathTFData '\all - alpha power_earlier_timewindow.mat'],'all')
+
+writetable(struct2table(all), ['D:\export\exp5_scenes_alpha.csv'])
+
+save([pathTFData '\exp5_scenes_alpha.mat'],'all')
 
