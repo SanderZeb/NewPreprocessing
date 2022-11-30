@@ -1,6 +1,7 @@
 settings.paradigm = 5;
-settings.inverted = 0;
-settings.intercept = 1;
+settings.inverted = 1;
+settings.intercept = 0;
+settings.epochsToAdjust = 1;
 % 
 % if n ==1
 %     settings.inverted = 1;
@@ -80,6 +81,7 @@ end
 
 [~,~,~,settings.times,settings.freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
 clear temp data y* x* beta* EEG B file s
+    clear temp data* y* x* idx* beta* empty* participant_event participantID channel id_to_drop to_include
 close all
 for s=1:length(listTFData)
     participantID = listTFData(s).participant;
@@ -87,7 +89,11 @@ for s=1:length(listTFData)
     participant_event = events{participantID};
     temp = load([pathTFData listTFData(s).name]);
     data = abs(temp.tfdata);
-    
+     if settings.epochsToAdjust == 1
+
+            data = data(:,  :, [participant_event.epoch]);
+
+     end
     
     
     for i=1:length(participant_event)
@@ -99,8 +105,11 @@ for s=1:length(listTFData)
     end
 
     
-    participant_event2 = participant_event(boolean(idx))
-    to_include = [participant_event2.epoch];
+    participant_event2 = participant_event(boolean(idx));
+    for i =1:length(participant_event2)
+        to_include(i) = i;
+    end
+    %     to_include = [participant_event2.epoch];
     
     data = data(:,:,to_include);
     
@@ -340,6 +349,6 @@ for s=1:length(listTFData)
             save([pathBETAS num2str(participantID) '_Betas_object_duration_chann_' num2str(channel)], 'beta_object_duration');
             save([pathBETAS num2str(participantID) '_Betas_object_congruency_chann_' num2str(channel)], 'beta_object_congruency');
     end
-    clear temp data* y* x* idx* beta* empty* participant_event participantID channel id_to_drop
+    clear temp data* y* x* idx* beta* empty* participant_event participantID channel id_to_drop to_include
     
 end

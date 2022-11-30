@@ -82,7 +82,8 @@ for s=[1:participants]
         elseif  paradigm == 4
             EEG = events_faces(EEG);
         elseif  paradigm == 5
-            EEG = events_scenes(EEG);
+            %EEG = events_scenes(EEG);
+            EEG = events_scenes_debugging(EEG);
         elseif  paradigm == 6
             %EEG = events_Kinga(EEG);
         end

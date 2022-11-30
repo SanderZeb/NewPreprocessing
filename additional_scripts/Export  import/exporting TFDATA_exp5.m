@@ -69,9 +69,9 @@ channels.HEOG = find(strcmp({chanlocs.labels}, 'HEOG')==1);									%INDEX CHANN
 settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 channels.PO8 channels.PO3 channels.PO4 channels.POz channels.Iz channels.P1 channels.Pz channels.P2 channels.P3 channels.P5 channels.P7];
 
 try
-    
+
     load([root 'events.mat']);
-    
+
 catch
     for s=[1:participants]
         fileEEGData=listEEGData(s).name;
@@ -85,8 +85,8 @@ catch
         elseif settings.paradigm == 4
             EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 5
-            
-           
+
+
         end
         chanlocs_all{s} = EEG.chanlocs;
         events{s} = EEG.event;
@@ -97,28 +97,28 @@ end
 %% clear mess, assign channel and participant index to files list
 
 for s=1:length(listTFData)
-    
+
     file=listTFData(s).name;
-    
+
     B = regexp(file,'\d*','Match');
     listTFData(s).channel = str2num(B{1, 1})
     listTFData(s).participant = str2num(B{1, 2})
 end
 error_rate = 0;
 for i = 1:length(events)
-       
-        participant_event = events{1, i}
-         clear empty_event 
-    
+
+    participant_event = events{1, i}
+    clear empty_event
+
     %participant_event = rmfield(participant_event, 'stimulus');
-    
+
     empty_event = cellfun(@isempty, struct2cell(participant_event));
     empty_events(s) = sum(sum(empty_event));
-    
+
     if sum(sum(empty_event)) > 0
         empty_event = squeeze(empty_event)';
         [empty_event_r, empty_event_c] = find(empty_event==1);
-        
+
         %         if length(unique(empty_event_r)) == 1
         %             x([unique(empty_event_r)]).pas = 1;
         %             x([unique(empty_event_r)]).detection2 = 0;
@@ -130,7 +130,7 @@ for i = 1:length(events)
     else
         id_to_drop = [];
     end
-    
+
     participant_event([id_to_drop]) = [];
     events2{i} = participant_event;
     %test(i).eventssss = participant_event(end).epoch;;
@@ -147,22 +147,22 @@ all = []
 n=1;
 error_rate = 0;
 for s=1:length(new_list)
-   
+
     participantID = new_list(s).participant;
     channel = new_list(s).channel;
     participant_event = events{participantID};
-    
-    
-    
+
+
+
     participant_event = rmfield(participant_event, 'stimulus');
-    clear empty_event  id_to_drop 
+    clear empty_event  id_to_drop
     empty_event = cellfun(@isempty, struct2cell(participant_event));
     empty_events(s) = sum(sum(empty_event));
-    
+
     if sum(sum(empty_event)) > 0
         empty_event = squeeze(empty_event)';
         [empty_event_r, empty_event_c] = find(empty_event==1);
-        
+
         %         if length(unique(empty_event_r)) == 1
         %             x([unique(empty_event_r)]).pas = 1;
         %             x([unique(empty_event_r)]).detection2 = 0;
@@ -174,42 +174,42 @@ for s=1:length(new_list)
     else
         id_to_drop = [];
     end
-    
+
     participant_event([id_to_drop]) = [];
-    
-    
+
+
     temp = load([pathTFData new_list(s).name]);
     temp2 = temp.tfdata(:,:, [participant_event.epoch]);
     data_raw(n, :,:,:) = abs(temp2).^2      ;                                              % convert to (uV^2/Hz)
-    
-    
-    
+
+
+
     if s+1 > length(new_list) || participantID ~= new_list(s+1).participant
         data_temp = squeeze(mean(data_raw, 1));
         data_db(:,:,:) = 10 * log10(data_temp) ;
-        
-        
-        
+
+
+
         participant_event_clean = participant_event;
         participant_event_clean = rmfield(participant_event_clean, 'latency');
         participant_event_clean = rmfield(participant_event_clean, 'urevent');
-        participant_event_clean = rmfield(participant_event_clean, 'epoch');
-        try
-            participant_event_clean = rmfield(participant_event_clean, 'duration');
-        catch
-            
-        end
+        %participant_event_clean = rmfield(participant_event_clean, 'epoch');
+        %try
+        %participant_event_clean = rmfield(participant_event_clean, 'duration');
+        %catch
+
+        %end
         participant_event_clean = rmfield(participant_event_clean, 'identification');
-        participant_event_clean = rmfield(participant_event_clean, 'version');
-        participant_event_clean = rmfield(participant_event_clean, 'task_order');
+        %participant_event_clean = rmfield(participant_event_clean, 'version');
+        %participant_event_clean = rmfield(participant_event_clean, 'task_order');
         [participant_event_clean.id2] = participant_event_clean.corrected_id;
         participant_event_clean = rmfield(participant_event_clean,'corrected_id');
-        
+
         data_db_mean = mean(squeeze(mean(data_db(settings.freqs_roi,settings.times_roi,:),1)),1);
         data_raw_mean = squeeze(mean(mean(squeeze(mean(data_raw(:, settings.freqs_roi,settings.times_roi,:),1)),1),2));
         y = mean(squeeze(mean(data_db(settings.freqs_roi,settings.times_roi,:),1)),1);
         y_standarized = (y - mean(y))/std(y);
-        
+
 
         for(i=1:length(participant_event_clean))
             if ~(contains(class(participant_event_clean(1).type), 'int32')) & ~(contains(class(participant_event_clean(1).type), 'double'))
@@ -221,8 +221,8 @@ for s=1:length(new_list)
             participant_event_clean(i).alpha_dB = data_db_mean(i);
             participant_event_clean(i).avg_dB = mean(data_db_mean);
             participant_event_clean(i).participant = participantID;
-            
-            
+
+
         end
         all = cat(2, all, participant_event_clean);
         n=1;
@@ -230,10 +230,10 @@ for s=1:length(new_list)
     else
         n=n+1;
     end
-    
+
     display(['Currently we are at: ' num2str(s)])
- end
-   
+end
+
 
 
 

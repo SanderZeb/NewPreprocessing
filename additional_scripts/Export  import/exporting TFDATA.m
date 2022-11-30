@@ -1,4 +1,4 @@
-settings.paradigm = 4;
+settings.paradigm = 5;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
 elseif settings.paradigm == 2

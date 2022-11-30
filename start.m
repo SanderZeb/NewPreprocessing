@@ -16,7 +16,8 @@ elseif settings.paradigm == 5
 elseif settings.paradigm == 6
     root='D:\Drive\6 - Kinga\';
 end
-addpath([filePath(1:end-7)])
+%addpath([filePath(1:end-7)])
+addpath('C:\Users\user\Documents\GitHub\NewPreprocessing')
 runFiltering(settings.paradigm, settings.fileType, root, settings.sampling) 
 filePath = matlab.desktop.editor.getActiveFilename;
 addpath([filePath(1:end-7) '\events'])

@@ -1,7 +1,8 @@
 
 %start = 'D:\Drive\1 - Threshold';
-start = 'D:\Drive\4 - Faces';
-root = [ start '\pwelch\pwelch_result\corrid']
+%start = 'D:\Drive\4 - Faces';
+start = 'D:\Drive\5 - Scenes';
+root = [ start '\pwelch\pwelch_result\bgr\corrid']
 files = dir(root)
 files = dir([root '\*.mat'])
 for i=1:length(files)
@@ -10,7 +11,8 @@ for i=1:length(files)
 end
 
 
-root = [ start '\pwelch\pwelch_result\incid']
+%root = [ start '\pwelch\pwelch_result\incid']
+root = [ start '\pwelch\pwelch_result\bgr\incid']
 files = dir(root)
 files = dir([root '\*.mat'])
 for i=1:length(files)
@@ -20,7 +22,8 @@ end
 
 
 
-root = [ start '\pwelch\pwelch_result\highpas']
+%root = [ start '\pwelch\pwelch_result\highpas']
+root = [ start '\pwelch\pwelch_result\bgr\highpas']
 files = dir(root)
 files = dir([root '\*.mat'])
 for i=1:length(files)
@@ -29,7 +32,8 @@ for i=1:length(files)
 end
 
 
-root = [ start '\pwelch\pwelch_result\lowpas']
+%root = [ start '\pwelch\pwelch_result\lowpas']
+root = [ start '\pwelch\pwelch_result\bgr\lowpas']
 files = dir(root)
 files = dir([root '\*.mat'])
 for i=1:length(files)

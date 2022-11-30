@@ -1,5 +1,5 @@
 settings.paradigm = 5
-
+settings.epochsToAdjust = 1;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
 elseif settings.paradigm == 2
@@ -36,11 +36,11 @@ clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST current
 close all
 
 try
-    
+
     load([root 'events.mat']);
     fileEEGData=listEEGData(1).name;
     EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
-    
+
 catch
     for s=[1:participants]
         fileEEGData=listEEGData(s).name;
@@ -54,7 +54,7 @@ catch
         elseif settings.paradigm == 4
             EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
         elseif settings.paradigm == 5
-            
+
         end
         chanlocs_all{s} = EEG.chanlocs;
         events{s} = EEG.event;
@@ -99,7 +99,7 @@ settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 c
 for s=1:length(listdata)
     clear B temp
     file=listdata(s).name;
-    
+
     B = regexp(file,'\d*','Match');
     listdata(s).participant = str2num(B{1, 1});
     listdata(s).events_num = length(events{1, str2num(B{1, 1})});
@@ -113,7 +113,7 @@ if settings.paradigm ~= 5
         temp = load([listdata(s).folder '\' file]);
         data_psds = temp.data_psds;
         participant_event = events{listdata(s).participant};
-        
+
         idx_highpas = logical([participant_event.pas] >= 2);
         idx_lowpas = logical([participant_event.pas] == 1);
         if settings.paradigm == 1 | settings.paradigm == 4
@@ -123,24 +123,24 @@ if settings.paradigm ~= 5
             idx_corr = logical([participant_event.corr_corr] ==1);
             idx_inc = logical([participant_event.corr_corr] == 0);
         end
-        
+
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
         inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
-        
-        
-        
+
+
+
         save([pathSaveData '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
         save([pathSaveData '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
         save([pathSaveData '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
         save([pathSaveData '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
-        
-        
+
+
         clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
     end
-    
-    
+
+
 elseif settings.paradigm == 5
     mkdir([pathSaveData, '\obj\'])
     mkdir([pathSaveData, '\bgr\'])
@@ -151,16 +151,22 @@ elseif settings.paradigm == 5
         temp = load([listdata(s).folder '\' file]);
         data_psds = temp.data_psds;
         participant_event = events{listdata(s).participant};
-        
+
+        if settings.epochsToAdjust == 1
+
+            data_psds = data_psds(:, [participant_event.epoch], :);
+
+        end
+
         clear idx_participant_event* participant_event_bgr participant_event_obj
         for i=1:length(participant_event)
-        idx_participant_event_bgr(i) = strcmp(participant_event(i).task_type, 'background');
-        idx_participant_event_obj(i) = strcmp(participant_event(i).task_type, 'object');
+            idx_participant_event_bgr(i) = strcmp(participant_event(i).task_type, 'background');
+            idx_participant_event_obj(i) = strcmp(participant_event(i).task_type, 'object');
         end
         participant_event_bgr = participant_event(idx_participant_event_bgr);
         participant_event_obj = participant_event(idx_participant_event_obj);
-        
-        
+
+
         %% object
         idx_highpas = logical([participant_event_obj.pas] >= 2);
         idx_lowpas = logical([participant_event_obj.pas] == 1);
@@ -168,14 +174,14 @@ elseif settings.paradigm == 5
         idx_corr = logical([participant_event_obj.corrected_id] ==1);
         idx_inc = logical([participant_event_obj.corrected_id] == 0);
 
-        
+
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
         inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
-        
-        
-        
+
+
+
         save([pathSaveData_obj '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
         save([pathSaveData_obj '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
         save([pathSaveData_obj '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
@@ -188,14 +194,14 @@ elseif settings.paradigm == 5
         idx_corr = logical([participant_event_bgr.corrected_id] ==1);
         idx_inc = logical([participant_event_bgr.corrected_id] == 0);
 
-        
+
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
         inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
-        
-        
-        
+
+
+
         save([pathSaveData_bgr '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
         save([pathSaveData_bgr '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
         save([pathSaveData_bgr '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');

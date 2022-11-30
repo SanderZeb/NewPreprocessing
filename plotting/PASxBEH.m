@@ -12,13 +12,28 @@ else
     participants.exp1 = 1;
 end
 sumy.exp_1_pas1_corr = sum([all.pas]==1 & [all.identification2] == 1) / participants.exp1;
+sumy.exp_1_pas1_corr_alfa = median([all([all.pas]==1 & [all.identification2] == 1).alpha_dB])
+
 sumy.exp_1_pas1_incr = sum([all.pas]==1 & [all.identification2] == 0) / participants.exp1;
+sumy.exp_1_pas1_incr_alfa = median([all([all.pas]==1 & [all.identification2] == 0).alpha_dB])
+
 sumy.exp_1_pas2_corr = sum([all.pas]==2 & [all.identification2] == 1) / participants.exp1;
+sumy.exp_1_pas2_corr_alfa = median([all([all.pas]==2 & [all.identification2] == 1).alpha_dB])
+
 sumy.exp_1_pas2_incr  = sum([all.pas]==2 & [all.identification2] == 0) / participants.exp1;
+sumy.exp_1_pas2_incr_alfa = median([all([all.pas]==2 & [all.identification2] == 0).alpha_dB])
+
 sumy.exp_1_pas3_corr = sum([all.pas]==3 & [all.identification2] == 1) / participants.exp1;
+sumy.exp_1_pas3_corr_alfa = median([all([all.pas]==3 & [all.identification2] == 1).alpha_dB])
+
 sumy.exp_1_pas3_incr  = sum([all.pas]==3 & [all.identification2] == 0) / participants.exp1;
+sumy.exp_1_pas3_incr_alfa = median([all([all.pas]==3 & [all.identification2] == 0).alpha_dB])
+
 sumy.exp_1_pas4_corr = sum([all.pas]==4 & [all.identification2] == 1) / participants.exp1;
+sumy.exp_1_pas4_corr_alfa = median([all([all.pas]==4 & [all.identification2] == 1).alpha_dB])
+
 sumy.exp_1_pas4_incr  = sum([all.pas]==4 & [all.identification2] == 0) / participants.exp1;
+sumy.exp_1_pas4_incr_alfa = median([all([all.pas]==4 & [all.identification2] == 0).alpha_dB])
 
 
 clear all
@@ -30,13 +45,30 @@ else
     participants.exp3 = 1;
 end
 sumy.exp_3_pas1_corr = sum([all.pas]==1 & [all.corr_corr] == 1) / participants.exp3;
+sumy.exp_3_pas1_corr_alfa = median([all([all.pas]==1 & [all.corr_corr] == 1).alpha_dB])
+
 sumy.exp_3_pas1_incr = sum([all.pas]==1 & [all.corr_corr] == 0) / participants.exp3;
+sumy.exp_3_pas1_incr_alfa = median([all([all.pas]==1 & [all.corr_corr] == 0).alpha_dB])
+
 sumy.exp_3_pas2_corr = sum([all.pas]==2 & [all.corr_corr] == 1) / participants.exp3;
+sumy.exp_3_pas2_corr_alfa = median([all([all.pas]==2 & [all.corr_corr] == 1).alpha_dB])
+
 sumy.exp_3_pas2_incr  = sum([all.pas]==2 & [all.corr_corr] == 0) / participants.exp3;
+sumy.exp_3_pas2_incr_alfa = median([all([all.pas]==2 & [all.corr_corr] == 0).alpha_dB])
+
 sumy.exp_3_pas3_corr = sum([all.pas]==3 & [all.corr_corr] == 1) / participants.exp3;
+sumy.exp_3_pas3_corr_alfa = median([all([all.pas]==3 & [all.corr_corr] == 1).alpha_dB])
+
 sumy.exp_3_pas3_incr  = sum([all.pas]==3 & [all.corr_corr] == 0) / participants.exp3;
+sumy.exp_3_pas3_incr_alfa = median([all([all.pas]==4 & [all.corr_corr] == 1).alpha_dB])
+
 sumy.exp_3_pas4_corr = sum([all.pas]==4 & [all.corr_corr] == 1) / participants.exp3;
+sumy.exp_3_pas4_corr_alfa = median([all([all.pas]==4 & [all.corr_corr] == 1).alpha_dB])
+
 sumy.exp_3_pas4_incr  = sum([all.pas]==4 & [all.corr_corr] == 0) / participants.exp3;
+sumy.exp_3_pas4_incr_alfa = median([all([all.pas]==4 & [all.corr_corr] == 0).alpha_dB])
+
+
 
 
 clear all
@@ -59,13 +91,35 @@ else
 end
 
 sumy.exp_4_pas1_corr = sum([all.pas]==1 & [all.identification2] == 1) / participants.exp4;
+sumy.exp_4_pas1_corr_alfa = median([all([all.pas]==1 & [all.identification2] == 1).alpha_dB])
+
+
 sumy.exp_4_pas1_incr = sum([all.pas]==1 & [all.identification2] == 0) / participants.exp4;
+sumy.exp_4_pas1_incr_alfa = median([all([all.pas]==1 & [all.identification2] == 0).alpha_dB])
+
+
 sumy.exp_4_pas2_corr = sum([all.pas]==2 & [all.identification2] == 1) / participants.exp4;
+sumy.exp_4_pas2_corr_alfa = median([all([all.pas]==2 & [all.identification2] == 1).alpha_dB])
+
+
 sumy.exp_4_pas2_incr  = sum([all.pas]==2 & [all.identification2] == 0) / participants.exp4;
+sumy.exp_4_pas2_incr_alfa = median([all([all.pas]==2 & [all.identification2] == 0).alpha_dB])
+
+
 sumy.exp_4_pas3_corr = sum([all.pas]==3 & [all.identification2] == 1) / participants.exp4;
+sumy.exp_4_pas3_corr_alfa = median([all([all.pas]==3 & [all.identification2] == 1).alpha_dB])
+
+
 sumy.exp_4_pas3_incr  = sum([all.pas]==3 & [all.identification2] == 0) / participants.exp4;
+sumy.exp_4_pas3_incr_alfa = median([all([all.pas]==4 & [all.identification2] == 1).alpha_dB])
+
+
 sumy.exp_4_pas4_corr = sum([all.pas]==4 & [all.identification2] == 1) / participants.exp4;
+sumy.exp_4_pas4_corr_alfa = median([all([all.pas]==4 & [all.identification2] == 1).alpha_dB])
+
+
 sumy.exp_4_pas4_incr  = sum([all.pas]==4 & [all.identification2] == 0) / participants.exp4;
+sumy.exp_4_pas4_incr_alfa = median([all([all.pas]==4 & [all.identification2] == 0).alpha_dB])
 
 
 writetable(struct2table(sumy), 'D:\sum_of_trials.csv')
@@ -86,24 +140,62 @@ else
 end
 
 sumy.exp5_obj_pas1_corr = sum([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_obj_pas1_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_obj__pas1_incr = sum([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_obj_pas1_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 0).alpha_dB])
+
 sumy.exp5_obj_pas2_corr = sum([all.t_type] == 1 & [all.pas]==2 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_obj_pas2_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==2 & [all.id2] == 1).alpha_dB])
+
 sumy.exp5_obj_pas2_incr  = sum([all.t_type] == 1 & [all.pas]==2 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_obj_pas2_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==2 & [all.id2] == 0).alpha_dB])
+
 sumy.exp5_obj_pas3_corr = sum([all.t_type] == 1 & [all.pas]==3 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_obj_pas3_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==3 & [all.id2] == 1).alpha_dB])
+
 sumy.exp5_obj_pas3_incr  = sum([all.t_type] == 1 & [all.pas]==3 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_obj_pas3_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==3 & [all.id2] == 0).alpha_dB])
+
 sumy.exp5_obj_pas4_corr = sum([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_obj_pas4_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 1).alpha_dB])
+
 sumy.exp5_obj_pas4_incr  = sum([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_obj_pas4_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 0).alpha_dB])
 
 
 
 sumy.exp5_bgr_pas1_corr = sum([all.t_type] == 0 & [all.pas]==1 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_bgr_pas1_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_bgr__pas1_incr = sum([all.t_type] == 0 & [all.pas]==1 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_bgr_pas1_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==1 & [all.id2] == 0).alpha_dB])
+
+
 sumy.exp5_bgr_pas2_corr = sum([all.t_type] == 0 & [all.pas]==2 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_bgr_pas2_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==2 & [all.id2] == 0).alpha_dB])
+
+
 sumy.exp5_bgr_pas2_incr  = sum([all.t_type] == 0 & [all.pas]==2 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_bgr_pas2_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==3 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_bgr_pas3_corr = sum([all.t_type] == 0 & [all.pas]==3 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_bgr_pas3_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_bgr_pas3_incr  = sum([all.t_type] == 0 & [all.pas]==3 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_bgr_pas3_incr_alfa = median([all([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_bgr_pas4_corr = sum([all.t_type] == 0 & [all.pas]==4 & [all.id2] == 1) / participants.exp5;
+sumy.exp_5_bgr_pas4_corr_alfa = median([all([all.t_type] == 1 & [all.pas]==4 & [all.id2] == 1).alpha_dB])
+
+
 sumy.exp5_bgr_pas4_incr  = sum([all.t_type] == 0 & [all.pas]==4 & [all.id2] == 0) / participants.exp5;
+sumy.exp_5_bgr_pas4_incr_alfa = median([all([all.t_type] == 1 &  [all.pas]==4 & [all.id2] == 0).alpha_dB])
 
 
 
@@ -113,19 +205,20 @@ figure; hold on;
 subplot(5,1,1)
 hold on;
 title('Exp 1 - Threshold')
-bubblechart( 1, sumy.exp_1_pas1_corr, sumy.exp_1_pas1_corr, settings.consc_color)
-bubblechart( 2, sumy.exp_1_pas1_incr, sumy.exp_1_pas1_incr, settings.unconsc_color)
-bubblechart( 3, sumy.exp_1_pas2_corr, sumy.exp_1_pas2_corr, settings.consc_color)
-bubblechart( 4, sumy.exp_1_pas2_incr, sumy.exp_1_pas2_incr, settings.unconsc_color)
-bubblechart( 5, sumy.exp_1_pas3_corr, sumy.exp_1_pas3_corr, settings.consc_color)
-bubblechart( 6, sumy.exp_1_pas3_incr, sumy.exp_1_pas3_incr, settings.unconsc_color)
-bubblechart( 7, sumy.exp_1_pas4_corr, sumy.exp_1_pas4_corr, settings.consc_color)
-bubblechart( 8, sumy.exp_1_pas4_incr, sumy.exp_1_pas4_incr, settings.unconsc_color)
+bubblechart( 1, sumy.exp_1_pas1_corr_alfa, sumy.exp_1_pas1_corr, settings.consc_color)
+bubblechart( 2, sumy.exp_1_pas1_incr_alfa, sumy.exp_1_pas1_incr, settings.unconsc_color)
+bubblechart( 3, sumy.exp_1_pas2_corr_alfa, sumy.exp_1_pas2_corr, settings.consc_color)
+bubblechart( 4, sumy.exp_1_pas2_incr_alfa, sumy.exp_1_pas2_incr,  settings.unconsc_color)
+bubblechart( 5, sumy.exp_1_pas3_corr_alfa, sumy.exp_1_pas3_corr, settings.consc_color)
+bubblechart( 6, sumy.exp_1_pas3_incr_alfa, sumy.exp_1_pas3_incr,settings.unconsc_color)
+bubblechart( 7, sumy.exp_1_pas4_corr_alfa, sumy.exp_1_pas4_corr, settings.consc_color)
+bubblechart( 8, sumy.exp_1_pas4_incr_alfa, sumy.exp_1_pas4_incr, settings.unconsc_color)
 
 label = {'PAS 1 - Correct';'PAS 1 - Incorrect'; 'PAS 2 - Correct';'PAS 2 - Incorrect'; 'PAS 3 - Correct';'PAS 3 - Incorrect'; 'PAS 4 - Correct';'PAS 4 - Incorrect';}
 xticklabels(label)
-ylabel('amount of trials')
-ylim([0 200])
+ylabel('Alpha power [dB]')
+%ylim([0 200])
+ylim([16 28])
 hold off
 
 
@@ -133,56 +226,59 @@ hold off
 subplot(5,1,2)
  hold on;
 title('Exp 3 - Mask')
-bubblechart( 1, sumy.exp_3_pas1_corr, sumy.exp_3_pas1_corr, settings.consc_color)
-bubblechart( 2, sumy.exp_3_pas1_incr, sumy.exp_3_pas1_incr, settings.unconsc_color)
-bubblechart( 3, sumy.exp_3_pas2_corr, sumy.exp_3_pas2_corr, settings.consc_color)
-bubblechart( 4, sumy.exp_3_pas2_incr, sumy.exp_3_pas2_incr, settings.unconsc_color)
-bubblechart( 5, sumy.exp_3_pas3_corr, sumy.exp_3_pas3_corr, settings.consc_color)
-bubblechart( 6, sumy.exp_3_pas3_incr, sumy.exp_3_pas3_incr, settings.unconsc_color)
-bubblechart( 7, sumy.exp_3_pas4_corr, sumy.exp_3_pas4_corr, settings.consc_color)
-bubblechart( 8, sumy.exp_3_pas4_incr, sumy.exp_3_pas4_incr, settings.unconsc_color)
+bubblechart( 1, sumy.exp_3_pas1_corr_alfa, sumy.exp_3_pas1_corr, settings.consc_color)
+bubblechart( 2, sumy.exp_3_pas1_incr_alfa, sumy.exp_3_pas1_incr, settings.unconsc_color)
+bubblechart( 3, sumy.exp_3_pas2_corr_alfa, sumy.exp_3_pas2_corr, settings.consc_color)
+bubblechart( 4, sumy.exp_3_pas2_incr_alfa, sumy.exp_3_pas2_incr, settings.unconsc_color)
+bubblechart( 5, sumy.exp_3_pas3_corr_alfa, sumy.exp_3_pas3_corr, settings.consc_color)
+bubblechart( 6, sumy.exp_3_pas3_incr_alfa, sumy.exp_3_pas3_incr, settings.unconsc_color)
+bubblechart( 7, sumy.exp_3_pas4_corr_alfa, sumy.exp_3_pas4_corr, settings.consc_color)
+bubblechart( 8, sumy.exp_3_pas4_incr_alfa, sumy.exp_3_pas4_incr, settings.unconsc_color)
 
 label = {'PAS 1 - Correct';'PAS 1 - Incorrect'; 'PAS 2 - Correct';'PAS 2 - Incorrect'; 'PAS 3 - Correct';'PAS 3 - Incorrect'; 'PAS 4 - Correct';'PAS 4 - Incorrect';}
 xticklabels(label)
-ylabel('amount of trials')
-ylim([0 200])
+ylabel('Alpha power [dB]')
+%ylim([0 200])
+ylim([16 28])
 hold off
 
 
 subplot(5,1,3)
  hold on;
 title('Exp 4 - Faces')
-bubblechart( 1, sumy.exp_4_pas1_corr, sumy.exp_4_pas1_corr, settings.consc_color)
-bubblechart( 2, sumy.exp_4_pas1_incr, sumy.exp_4_pas1_incr, settings.unconsc_color)
-bubblechart( 3, sumy.exp_4_pas2_corr, sumy.exp_4_pas2_corr, settings.consc_color)
-bubblechart( 4, sumy.exp_4_pas2_incr, sumy.exp_4_pas2_incr, settings.unconsc_color)
-bubblechart( 5, sumy.exp_4_pas3_corr, sumy.exp_4_pas3_corr, settings.consc_color)
-bubblechart( 6, sumy.exp_4_pas3_incr, sumy.exp_4_pas3_incr, settings.unconsc_color)
-bubblechart( 7, sumy.exp_4_pas4_corr, sumy.exp_4_pas4_corr, settings.consc_color)
-bubblechart( 8, sumy.exp_4_pas4_incr, sumy.exp_4_pas4_incr, settings.unconsc_color)
+bubblechart( 1, sumy.exp_4_pas1_corr_alfa, sumy.exp_4_pas1_corr, settings.consc_color)
+bubblechart( 2, sumy.exp_4_pas1_incr_alfa, sumy.exp_4_pas1_incr, settings.unconsc_color)
+bubblechart( 3, sumy.exp_4_pas2_corr_alfa, sumy.exp_4_pas2_corr, settings.consc_color)
+bubblechart( 4, sumy.exp_4_pas2_incr_alfa, sumy.exp_4_pas2_incr, settings.unconsc_color)
+bubblechart( 5, sumy.exp_4_pas3_corr_alfa, sumy.exp_4_pas3_corr, settings.consc_color)
+bubblechart( 6, sumy.exp_4_pas3_incr_alfa, sumy.exp_4_pas3_incr, settings.unconsc_color)
+bubblechart( 7, sumy.exp_4_pas4_corr_alfa, sumy.exp_4_pas4_corr, settings.consc_color)
+bubblechart( 8, sumy.exp_4_pas4_incr_alfa, sumy.exp_4_pas4_incr, settings.unconsc_color)
 
 label = {'PAS 1 - Correct';'PAS 1 - Incorrect'; 'PAS 2 - Correct';'PAS 2 - Incorrect'; 'PAS 3 - Correct';'PAS 3 - Incorrect'; 'PAS 4 - Correct';'PAS 4 - Incorrect';}
 xticklabels(label)
-ylabel('amount of trials')
-ylim([0 200])
+ylabel('Alpha power [dB]')
+%ylim([0 200])
+ylim([16 28])
 hold off
 
 subplot(5,1,4)
  hold on;
 title('Exp 5 - Scenes - Object')
-bubblechart( 1, sumy.exp5_obj_pas1_corr, sumy.exp5_obj_pas1_corr, settings.consc_color)
-bubblechart( 2, sumy.exp5_obj__pas1_incr, sumy.exp5_obj__pas1_incr, settings.unconsc_color)
-bubblechart( 3, sumy.exp5_obj_pas2_corr, sumy.exp5_obj_pas2_corr, settings.consc_color)
-bubblechart( 4, sumy.exp5_obj_pas2_incr, sumy.exp5_obj_pas2_incr, settings.unconsc_color)
-bubblechart( 5, sumy.exp5_obj_pas3_corr, sumy.exp5_obj_pas3_corr, settings.consc_color)
-bubblechart( 6, sumy.exp5_obj_pas3_incr, sumy.exp5_obj_pas3_incr, settings.unconsc_color)
-bubblechart( 7, sumy.exp5_obj_pas4_corr, sumy.exp5_obj_pas4_corr, settings.consc_color)
-bubblechart( 8, sumy.exp5_obj_pas4_incr, sumy.exp5_obj_pas4_incr, settings.unconsc_color)
+bubblechart( 1, sumy.exp_5_obj_pas1_corr_alfa, sumy.exp5_obj_pas1_corr, settings.consc_color)
+bubblechart( 2, sumy.exp_5_obj_pas1_incr_alfa, sumy.exp5_obj__pas1_incr,settings.unconsc_color)
+bubblechart( 3, sumy.exp_5_obj_pas2_corr_alfa, sumy.exp5_obj_pas2_corr, settings.consc_color)
+bubblechart( 4, sumy.exp_5_obj_pas2_incr_alfa, sumy.exp5_obj_pas2_incr, settings.unconsc_color)
+bubblechart( 5, sumy.exp_5_obj_pas3_corr_alfa, sumy.exp5_obj_pas3_corr, settings.consc_color)
+bubblechart( 6, sumy.exp_5_obj_pas3_incr_alfa, sumy.exp5_obj_pas3_incr, settings.unconsc_color)
+bubblechart( 7, sumy.exp_5_obj_pas4_corr_alfa, sumy.exp5_obj_pas4_corr, settings.consc_color)
+bubblechart( 8, sumy.exp_5_obj_pas4_incr_alfa, sumy.exp5_obj_pas4_incr, settings.unconsc_color)
 
 label = {'PAS 1 - Correct';'PAS 1 - Incorrect'; 'PAS 2 - Correct';'PAS 2 - Incorrect'; 'PAS 3 - Correct';'PAS 3 - Incorrect'; 'PAS 4 - Correct';'PAS 4 - Incorrect';}
 xticklabels(label)
-ylabel('amount of trials')
-ylim([0 200])
+ylabel('Alpha power [dB]')
+%ylim([0 200])
+ylim([16 28])
 hold off
 
 
@@ -191,19 +287,20 @@ hold off
 subplot(5,1,5)
  hold on;
 title('Exp 5 - Scenes - Background')
-bubblechart( 1, sumy.exp5_bgr_pas1_corr, sumy.exp5_bgr_pas1_corr, settings.consc_color)
-bubblechart( 2, sumy.exp5_bgr__pas1_incr, sumy.exp5_bgr__pas1_incr, settings.unconsc_color)
-bubblechart( 3, sumy.exp5_bgr_pas2_corr, sumy.exp5_bgr_pas2_corr, settings.consc_color)
-bubblechart( 4, sumy.exp5_bgr_pas2_incr, sumy.exp5_bgr_pas2_incr, settings.unconsc_color)
-bubblechart( 5, sumy.exp5_bgr_pas3_corr, sumy.exp5_bgr_pas3_corr, settings.consc_color)
-bubblechart( 6, sumy.exp5_bgr_pas3_incr, sumy.exp5_bgr_pas3_incr, settings.unconsc_color)
-bubblechart( 7, sumy.exp5_bgr_pas4_corr, sumy.exp5_bgr_pas4_corr, settings.consc_color)
-bubblechart( 8, sumy.exp5_bgr_pas4_incr, sumy.exp5_bgr_pas4_incr, settings.unconsc_color)
+bubblechart( 1, sumy.exp_5_bgr_pas1_corr_alfa, sumy.exp5_bgr_pas1_corr, settings.consc_color)
+bubblechart( 2, sumy.exp_5_bgr_pas1_incr_alfa, sumy.exp5_bgr__pas1_incr, settings.unconsc_color)
+bubblechart( 3, sumy.exp_5_bgr_pas2_corr_alfa, sumy.exp5_bgr_pas2_corr, settings.consc_color)
+bubblechart( 4, sumy.exp_5_bgr_pas2_incr_alfa, sumy.exp5_bgr_pas2_incr, settings.unconsc_color)
+bubblechart( 5, sumy.exp_5_bgr_pas3_corr_alfa, sumy.exp5_bgr_pas3_corr, settings.consc_color)
+bubblechart( 6, sumy.exp_5_bgr_pas3_incr_alfa, sumy.exp5_bgr_pas3_incr, settings.unconsc_color)
+bubblechart( 7, sumy.exp_5_bgr_pas4_corr_alfa, sumy.exp5_bgr_pas4_corr, settings.consc_color)
+bubblechart( 8, sumy.exp_5_bgr_pas4_incr_alfa, sumy.exp5_bgr_pas4_incr, settings.unconsc_color)
 
 label = {'PAS 1 - Correct';'PAS 1 - Incorrect'; 'PAS 2 - Correct';'PAS 2 - Incorrect'; 'PAS 3 - Correct';'PAS 3 - Incorrect'; 'PAS 4 - Correct';'PAS 4 - Incorrect';}
 xticklabels(label)
-ylabel('amount of trials')
-ylim([0 200])
+ylabel('Alpha power [dB]')
+%ylim([0 200])
+ylim([16 28])
 hold off
 
 
