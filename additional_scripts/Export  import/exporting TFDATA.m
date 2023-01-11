@@ -1,4 +1,4 @@
-settings.paradigm = 5;
+settings.paradigm = 4;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
 elseif settings.paradigm == 2
@@ -27,7 +27,7 @@ chanlocs = EEG.chanlocs;
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
-settings.times_roi = times >= -800 & times <= 0;
+settings.times_roi = times >= -800 & times <= -400;
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL

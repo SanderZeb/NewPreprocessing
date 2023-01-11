@@ -1,4 +1,4 @@
-settings.paradigm = 4;
+settings.paradigm = 5;
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
 cd('C:\Program Files\MATLAB\R2019b\toolbox\stats\stats')
@@ -27,7 +27,7 @@ for s=[1:length(list)]
         clear tfdata data_psds
         
         
-        
+        chanlocs = EEG.chanlocs;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
 channels.M2 = find(strcmp({chanlocs.labels}, 'M2')==1);              	%INDEX CHANNEL

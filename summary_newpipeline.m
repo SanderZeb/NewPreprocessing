@@ -1,6 +1,6 @@
 close all
 clear all
-settings.paradigm = 6; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
+settings.paradigm = 5; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes; 6 - Kinga
 
 
 addpath('C:\Users\user\Desktop\eeglab2022.0')

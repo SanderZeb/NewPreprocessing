@@ -1,4 +1,3 @@
-clear all
 % general settings
 settings.paradigm = 4; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 1; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
@@ -19,13 +18,13 @@ settings.limits.up = 0.06;
 settings.limits.down = -0.06;
 
 
-settings.onlyClusters = 0;
+settings.onlyClusters = 1;
 settings.TopoWithMask = 1;
 settings.oldway = 2; % 0 for 4 topoplots [-800 -600; -600 -400; -400 -200; -200 0]; 1 for multiple topoplots with averaged timewindow (specified by settings.step); -1 for multiple topoplots with timewindow from single timepoint
-settings.prestimulusOnly = 0;
+settings.prestimulusOnly = 1;
 
 
-settings.prefix = 'supp_'; % additional prefix for naming plots
+settings.prefix = 'final2_'; % additional prefix for naming plots
 
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
@@ -656,7 +655,7 @@ clear t heads* to_plot temp ss m n h_ax h_ax_c cb
 
 
 %%%%%%%%%%%%%%%%
-  ss=get(0, 'ScreenSize');
+
     settings.timesx = settings.final_topo_times;
     
     fnames_topo= fields(data_topo);
@@ -677,25 +676,38 @@ clear t heads* to_plot temp ss m n h_ax h_ax_c cb
                 to_plot = temp;
                 settings.prefix = 'no_signif_mask_'; % additional prefix for naming plots
             end
-           
+            heads_cols = 3  ;
+            heads_rows = ceil(size(temp,2)/heads_cols);
+            figure('Position', [0 0 ss(3) ss(4)], "Visible", "off"); hold on;
+
+    
     
             for n=1:length(settings.timesx)
-                t= figure('Position', [0 0 ss(3) ss(4)], "Visible", "off"); hold on;
-
                 if any(to_plot(:, n))
                     topoplot(to_plot(:, n), chanlocs(1:64));
                 else
                     topoplot(to_plot(:, n), chanlocs(1:64), 'style', 'blank');
-                end
-                settings.prefix = [num2str(n)]; % additional prefix for naming plots
-                saveas(t,[savepath settings.prefix  fnames_topo{i, 1} '.png']);
-                saveas(t,[savepath  settings.prefix 'topo_betas' fnames_topo{i, 1} '.fig']);
-                close all
-                clear t
+                end        
+        saveas(t,[savepath settings.prefix 'topo_betas' fnames_topo{i, 1} '.png']);
+        saveas(t,[savepath settings.prefix 'topo_betas' fnames_topo{i, 1} '.fig']);
+    
             end
-    end
+            for n=1:length(t.Children)
+                t.Children(n).FontSize = 18;
+                t.Children(n).TitleFontWeight = 'normal';
+                t.Children(n).CLim = [settings.limits.down settings.limits.up];
+            end
+        %t.Children(8).Visible = 'off'
+        cbar;
+        ylim([settings.limits.down settings.limits.up]);
+        t.Parent.Children(1).YLabel.String = [beta ' coefficient'];
+        t.Parent.Children(1).YLabel.FontSize = 18;
+        t.Parent.Children(1).YAxisLocation = 'right';
+        t.Parent.Children(1).YLabel.VerticalAlignment = 'top';
+        
+        
 
         close all
         clear t mask_nonsignificant to_plot
         
-
+    end

@@ -1,26 +1,36 @@
-settings.paradigm = 5
-settings.epochsToAdjust = 1;
+clear all
+settings.paradigm = 4;
+settings.epochsToAdjust = 0;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
+    dropout = [5 6 18 106];
 elseif settings.paradigm == 2
     root = 'D:\Drive\2 - Cue\';
 elseif settings.paradigm == 3
     root = 'D:\Drive\3 - Mask\';
+    dropout = [10 82 99];
 elseif settings.paradigm == 4
     root = 'D:\Drive\4 - Faces\';
+    dropout = [5 30 36 78 83];
 elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
+    dropout = [56 74 91];
 end
 pathdata = [root '\pwelch\']
 mkdir([pathdata, '\pwelch_result'])
 pathSaveData = [pathdata '\pwelch_result\']
 pathEEGData = [root '\MARA\'];
 
-mkdir([pathSaveData, '\highpas'])
-mkdir([pathSaveData, '\lowpas'])
-mkdir([pathSaveData, '\corrid'])
-mkdir([pathSaveData, '\incid'])
-
+if settings.paradigm ~= 5
+    mkdir([pathSaveData, '\highpas'])
+    mkdir([pathSaveData, '\lowpas'])
+    mkdir([pathSaveData, '\corrid'])
+    mkdir([pathSaveData, '\incid'])
+    mkdir([pathSaveData, '\pas1'])
+    mkdir([pathSaveData, '\pas2'])
+    mkdir([pathSaveData, '\pas3'])
+    mkdir([pathSaveData, '\pas4'])
+end
 pathLoadData = pathEEGData;
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
@@ -109,6 +119,8 @@ end
 
 if settings.paradigm ~= 5
     for s=[1:length(listdata)]
+        participant = listdata(s).participant;
+        if ~any(find(participant==[dropout]))
         file=listdata(s).name;
         temp = load([listdata(s).folder '\' file]);
         data_psds = temp.data_psds;
@@ -116,6 +128,14 @@ if settings.paradigm ~= 5
 
         idx_highpas = logical([participant_event.pas] >= 2);
         idx_lowpas = logical([participant_event.pas] == 1);
+
+
+        idx_pas4 = logical([participant_event.pas] == 4);
+        idx_pas3 = logical([participant_event.pas] == 3);
+        idx_pas2 = logical([participant_event.pas] == 2);
+        idx_pas1 = logical([participant_event.pas] == 1);
+
+
         if settings.paradigm == 1 | settings.paradigm == 4
             idx_corr = logical([participant_event.identification2] ==1);
             idx_inc = logical([participant_event.identification2] == 0);
@@ -124,6 +144,11 @@ if settings.paradigm ~= 5
             idx_inc = logical([participant_event.corr_corr] == 0);
         end
 
+        pas4 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas4, :), 2), 1));
+        pas3 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas3, :), 2), 1));
+        pas2 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas2, :), 2), 1));
+        pas1 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas1, :), 2), 1));
+
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
@@ -131,13 +156,34 @@ if settings.paradigm ~= 5
 
 
 
+        if sum(idx_pas1) > 30
+        save([pathSaveData '\pas1\' num2str(listdata(s).participant) '.mat'],'pas1');
+        end
+        if sum(idx_pas2) > 30
+        save([pathSaveData '\pas2\' num2str(listdata(s).participant) '.mat'],'pas2');
+        end
+        if sum(idx_pas3) > 30
+        save([pathSaveData '\pas3\' num2str(listdata(s).participant) '.mat'],'pas3');
+        end
+        if sum(idx_pas4) > 30
+        save([pathSaveData '\pas4\' num2str(listdata(s).participant) '.mat'],'pas4');
+        end
+        if sum(idx_highpas) > 30
         save([pathSaveData '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        end
+        if sum(idx_lowpas) > 30
         save([pathSaveData '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        end
+        if sum(idx_corr) > 30
         save([pathSaveData '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        end
+        if sum(idx_inc) > 30
         save([pathSaveData '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        end
 
 
         clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
+        end
     end
 
 
@@ -146,7 +192,26 @@ elseif settings.paradigm == 5
     mkdir([pathSaveData, '\bgr\'])
     pathSaveData_obj = [pathSaveData '\obj\']
     pathSaveData_bgr = [pathSaveData '\bgr\']
+    mkdir([pathSaveData_obj, '\highpas'])
+    mkdir([pathSaveData_obj, '\lowpas'])
+    mkdir([pathSaveData_obj, '\corrid'])
+    mkdir([pathSaveData_obj, '\incid'])
+    mkdir([pathSaveData_obj, '\pas1'])
+    mkdir([pathSaveData_obj, '\pas2'])
+    mkdir([pathSaveData_obj, '\pas3'])
+    mkdir([pathSaveData_obj, '\pas4'])
+    mkdir([pathSaveData_bgr, '\highpas'])
+    mkdir([pathSaveData_bgr, '\lowpas'])
+    mkdir([pathSaveData_bgr, '\corrid'])
+    mkdir([pathSaveData_bgr, '\incid'])
+    mkdir([pathSaveData_bgr, '\pas1'])
+    mkdir([pathSaveData_bgr, '\pas2'])
+    mkdir([pathSaveData_bgr, '\pas3'])
+    mkdir([pathSaveData_bgr, '\pas4'])
+
     for s=[1:length(listdata)]
+        participant = listdata(s).participant;
+        if ~any(find(participant==[dropout]))
         file=listdata(s).name;
         temp = load([listdata(s).folder '\' file]);
         data_psds = temp.data_psds;
@@ -171,30 +236,68 @@ elseif settings.paradigm == 5
         idx_highpas = logical([participant_event_obj.pas] >= 2);
         idx_lowpas = logical([participant_event_obj.pas] == 1);
 
-        idx_corr = logical([participant_event_obj.corrected_id] ==1);
-        idx_inc = logical([participant_event_obj.corrected_id] == 0);
+        idx_pas4 = logical([participant_event_obj.pas] == 4);
+        idx_pas3 = logical([participant_event_obj.pas] == 3);
+        idx_pas2 = logical([participant_event_obj.pas] == 2);
+        idx_pas1 = logical([participant_event_obj.pas] == 1);
+
+        idx_corr = logical([participant_event_obj.accuracy] ==1);
+        idx_inc = logical([participant_event_obj.accuracy] == 0);
 
 
+        pas4 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas4, :), 2), 1));
+        pas3 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas3, :), 2), 1));
+        pas2 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas2, :), 2), 1));
+        pas1 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas1, :), 2), 1));
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
         inc_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_inc, :), 2), 1));
 
 
-
+        if sum(idx_pas1) > 30
+        save([pathSaveData_obj '\pas1\' num2str(listdata(s).participant) '.mat'],'pas1');
+        end
+        if sum(idx_pas2) > 30
+        save([pathSaveData_obj '\pas2\' num2str(listdata(s).participant) '.mat'],'pas2');
+        end
+        if sum(idx_pas3) > 30
+        save([pathSaveData_obj '\pas3\' num2str(listdata(s).participant) '.mat'],'pas3');
+        end
+        if sum(idx_pas4) > 30
+        save([pathSaveData_obj '\pas4\' num2str(listdata(s).participant) '.mat'],'pas4');
+        end
+        if sum(idx_highpas) > 30
         save([pathSaveData_obj '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        end
+        if sum(idx_lowpas) > 30
         save([pathSaveData_obj '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        end
+        if sum(idx_corr) > 30
         save([pathSaveData_obj '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        end
+        if sum(idx_inc) > 30
         save([pathSaveData_obj '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        end
         clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc
+
+
         %% background
         idx_highpas = logical([participant_event_bgr.pas] >= 2);
         idx_lowpas = logical([participant_event_bgr.pas] == 1);
 
+        idx_pas4 = logical([participant_event_bgr.pas] == 4);
+        idx_pas3 = logical([participant_event_bgr.pas] == 3);
+        idx_pas2 = logical([participant_event_bgr.pas] == 2);
+        idx_pas1 = logical([participant_event_bgr.pas] == 1);
         idx_corr = logical([participant_event_bgr.corrected_id] ==1);
         idx_inc = logical([participant_event_bgr.corrected_id] == 0);
 
 
+        pas4 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas4, :), 2), 1));
+        pas3 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas3, :), 2), 1));
+        pas2 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas2, :), 2), 1));
+        pas1 = squeeze(mean(mean(data_psds(settings.selected_channels, idx_pas1, :), 2), 1));
         lowpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_lowpas, :), 2), 1));
         highpas = squeeze(mean(mean(data_psds(settings.selected_channels, idx_highpas, :), 2), 1));
         corr_id = squeeze(mean(mean(data_psds(settings.selected_channels, idx_corr, :), 2), 1));
@@ -202,11 +305,33 @@ elseif settings.paradigm == 5
 
 
 
+        if sum(idx_pas1) > 30
+        save([pathSaveData_bgr '\pas1\' num2str(listdata(s).participant) '.mat'],'pas1');
+        end
+        if sum(idx_pas2) > 30
+        save([pathSaveData_bgr '\pas2\' num2str(listdata(s).participant) '.mat'],'pas2');
+        end
+        if sum(idx_pas3) > 30
+        save([pathSaveData_bgr '\pas3\' num2str(listdata(s).participant) '.mat'],'pas3');
+        end
+        if sum(idx_pas4) > 30
+        save([pathSaveData_bgr '\pas4\' num2str(listdata(s).participant) '.mat'],'pas4');
+        end
+        if sum(idx_highpas) > 30
         save([pathSaveData_bgr '\highpas\' num2str(listdata(s).participant) '.mat'],'highpas');
+        end
+        if sum(idx_lowpas) > 30
         save([pathSaveData_bgr '\lowpas\' num2str(listdata(s).participant) '.mat'],'lowpas');
+        end
+        if sum(idx_corr) > 30
         save([pathSaveData_bgr '\corrid\' num2str(listdata(s).participant) '.mat'],'corr_id');
+        end
+        if sum(idx_inc) > 30
         save([pathSaveData_bgr '\incid\' num2str(listdata(s).participant) '.mat'],'inc_id');
+        end
         clear lowpas highpas corr_id inc_id idx_highpas idx_lowpas idx_corr idx_inc participant_event data_psds temp file
+        end
     end
-end
+    end
+
 

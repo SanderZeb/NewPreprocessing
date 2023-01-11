@@ -24,10 +24,10 @@ import warnings
 from fooof.bands import Bands
 from fooof.plts.spectra import plot_spectra_shading
 
-#root = r'D:\Drive\1 - Threshold'
+# root = r'D:\Drive\1 - Threshold'
 #root = r'D:\Drive\3 - Mask'
-root = r'D:\Drive\4 - Faces'
-#root = r'D:\Drive\5 - Scenes'
+# root = r'D:\Drive\4 - Faces'
+root = r'D:\Drive\5 - Scenes'
 
 
 bands = Bands({'delta' : [1, 4],
@@ -77,22 +77,38 @@ warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 #freqs_dict = loadmat(r'D:\freqs.mat') #whole epoch
 freqs_dict = loadmat(r'D:\freqs_mean.mat') #prestimulus part
 
-pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
-pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
-pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
-pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
+
+# pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
+# pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
+# pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
+# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
+# pathdata_pas1 = rf'{root}\pwelch\pwelch_result\pas1'
+# pathdata_pas2 = rf'{root}\pwelch\pwelch_result\pas2'
+# pathdata_pas3 = rf'{root}\pwelch\pwelch_result\pas3'
+# pathdata_pas4 = rf'{root}\pwelch\pwelch_result\pas4'
 
 
-# pathdata_corrid = rf'{root}\pwelch\pwelch_result\bgr\corrid'
-# pathdata_incid = rf'{root}\pwelch\pwelch_result\bgr\incid'
-# pathdata_highpas = rf'{root}\pwelch\pwelch_result\bgr\highpas'
-# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\bgr\lowpas'
+
+# task_type = "bgr";
+task_type = "obj";
+pathdata_corrid = rf'{root}\pwelch\pwelch_result\{task_type}\corrid'
+pathdata_incid = rf'{root}\pwelch\pwelch_result\{task_type}\incid'
+pathdata_highpas = rf'{root}\pwelch\pwelch_result\{task_type}\highpas'
+pathdata_lowpas = rf'{root}\pwelch\pwelch_result\{task_type}\lowpas'
+pathdata_pas1 = rf'{root}\pwelch\pwelch_result\{task_type}\pas1'
+pathdata_pas2 = rf'{root}\pwelch\pwelch_result\{task_type}\pas2'
+pathdata_pas3 = rf'{root}\pwelch\pwelch_result\{task_type}\pas3'
+pathdata_pas4 = rf'{root}\pwelch\pwelch_result\{task_type}\pas4'
 
 
 onlyfiles_corrid = [f for f in listdir(pathdata_corrid) if isfile(join(pathdata_corrid, f))]
 onlyfiles_incid = [f for f in listdir(pathdata_incid) if isfile(join(pathdata_incid, f))]
 onlyfiles_highpas = [f for f in listdir(pathdata_highpas) if isfile(join(pathdata_highpas, f))]
 onlyfiles_lowpas = [f for f in listdir(pathdata_lowpas) if isfile(join(pathdata_lowpas, f))]
+onlyfiles_pas1 = [f for f in listdir(pathdata_pas1) if isfile(join(pathdata_pas1, f))]
+onlyfiles_pas2 = [f for f in listdir(pathdata_pas2) if isfile(join(pathdata_pas2, f))]
+onlyfiles_pas3 = [f for f in listdir(pathdata_pas3) if isfile(join(pathdata_pas3, f))]
+onlyfiles_pas4 = [f for f in listdir(pathdata_pas4) if isfile(join(pathdata_pas4, f))]
     
 
 
@@ -101,11 +117,23 @@ list_corrid = []
 list_incid = []
 list_highpas = []
 list_lowpas = []
+list_pas1 = []
+list_pas2 = []
+list_pas3 = []
+list_pas4 = []
+
+
+
+
 
 psds_corrid = []
 psds_incid = []
 psds_highpas = []
 psds_lowpas = []
+psds_pas1 = []
+psds_pas2 = []
+psds_pas3 = []
+psds_pas4 = []
 
 ## first jump
 #peaks = 1
@@ -272,11 +300,129 @@ fGroup_lowpas.drop(fGroup_lowpas.get_params('error') > threshold_to_drop)
 print('number of dropped models: ', fGroup_lowpas.n_null_)
 fGroup_lowpas.plot()    
 
+    
+for file in onlyfiles_pas1:
+    filepath = os.path.join(pathdata_pas1, file)
+    data_dict = loadmat(f'{filepath}')    
+    participant = re.findall(r'\d+', file)
+    psds = np.squeeze(data_dict['pas1']).astype('float')
+    psds_pas1.append(psds)
+    freqs = np.squeeze(freqs_dict['freqs']).astype('float')
+    
+    fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
+    fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
+    list_pas1.append(fm);
+    if fm.peak_params_.size == 0:
+        df_pas1 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_pas1 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_pas1}\fooof\{file}', df_pas1)
+fGroup_pas1 = combine_fooofs(list_pas1)      
+fGroup_pas1.fit()
+fGroup_pas1.drop(fGroup_pas1.get_params('error') > threshold_to_drop)
+print('number of dropped models: ', fGroup_pas1.n_null_)
+fGroup_pas1.plot()   
+
+for file in onlyfiles_pas2:
+    filepath = os.path.join(pathdata_pas2, file)
+    data_dict = loadmat(f'{filepath}')    
+    participant = re.findall(r'\d+', file)
+    psds = np.squeeze(data_dict['pas2']).astype('float')
+    psds_pas2.append(psds)
+    freqs = np.squeeze(freqs_dict['freqs']).astype('float')
+    
+    fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
+    fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
+    list_pas2.append(fm);
+    if fm.peak_params_.size == 0:
+        df_pas2 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_pas2 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_pas2}\fooof\{file}', df_pas2)
+fGroup_pas2 = combine_fooofs(list_pas2)      
+fGroup_pas2.fit()
+fGroup_pas2.drop(fGroup_pas2.get_params('error') > threshold_to_drop)
+print('number of dropped models: ', fGroup_pas2.n_null_)
+fGroup_pas2.plot()   
 
 
+for file in onlyfiles_pas3:
+    filepath = os.path.join(pathdata_pas3, file)
+    data_dict = loadmat(f'{filepath}')    
+    participant = re.findall(r'\d+', file)
+    psds = np.squeeze(data_dict['pas3']).astype('float')
+    psds_pas3.append(psds)
+    freqs = np.squeeze(freqs_dict['freqs']).astype('float')
+    
+    fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
+    fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
+    list_pas3.append(fm);
+    if fm.peak_params_.size == 0:
+        df_pas3 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_pas3 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_pas3}\fooof\{file}', df_pas3)
+fGroup_pas3 = combine_fooofs(list_pas3)      
+fGroup_pas3.fit()
+fGroup_pas3.drop(fGroup_pas3.get_params('error') > threshold_to_drop)
+print('number of dropped models: ', fGroup_pas3.n_null_)
+fGroup_pas3.plot()   
 
 
+for file in onlyfiles_pas4:
+    filepath = os.path.join(pathdata_pas4, file)
+    data_dict = loadmat(f'{filepath}')    
+    participant = re.findall(r'\d+', file)
+    psds = np.squeeze(data_dict['pas4']).astype('float')
 
+    psds_pas4.append(psds)
+    freqs = np.squeeze(freqs_dict['freqs']).astype('float')
+    
+    fm = FOOOF(peak_width_limits = peak_width_limits, max_n_peaks=peaks,  min_peak_height=min_peak_height, peak_threshold=peak_threshold, aperiodic_mode = aperiodic_mode);
+    fm.fit(freqs, psds, [lower_freqs, upper_freqs]);
+    list_pas4.append(fm);
+    if fm.peak_params_.size == 0:
+        df_pas4 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': 0, 'Power_freq': 0, 'Bandwith_freq': 0, 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    else:
+        df_pas4 = {'aperiodic_fit':  fm._ap_fit, 'FOOOF_model': fm.fooofed_spectrum_, 'Power_spectrum': fm.power_spectrum, 
+                     'aperiodic_params': fm.aperiodic_params_, 'r2': fm.r_squared_, 'error': fm.error_, 
+                     'Central_freq': fm.peak_params_[0,0], 'Power_freq': fm.peak_params_[0,1], 'Bandwith_freq': fm.peak_params_[0,2], 
+                     'Gaussian_params': fm.gaussian_params_, 'Gaussian_overlap': fm._gauss_overlap_thresh, 'Spectrum_flat': fm._spectrum_flat, 
+                     'Spectrum_peak_rm': fm._spectrum_peak_rm}
+    savemat(rf'{pathdata_pas4}\fooof\{file}', df_pas4)
+fGroup_pas4 = combine_fooofs(list_pas4)      
+fGroup_pas4.fit()
+fGroup_pas4.drop(fGroup_pas4.get_params('error') > threshold_to_drop)
+print('number of dropped models: ', fGroup_pas4.n_null_)
+fGroup_pas4.plot()   
 
 # # Extract a model parameter with `get_params`
 # err = fGroup_corrid.get_params('error')
@@ -311,6 +457,10 @@ avg_corrid = average_fg(fGroup_corrid, bands, avg_method='median')
 avg_incid = average_fg(fGroup_incid, bands, avg_method='median')
 avg_highpas = average_fg(fGroup_highpas, bands, avg_method='median')
 avg_lowpas = average_fg(fGroup_lowpas, bands, avg_method='median')
+avg_pas1 = average_fg(fGroup_pas1, bands, avg_method='median')
+avg_pas2 = average_fg(fGroup_pas2, bands, avg_method='median')
+avg_pas3 = average_fg(fGroup_pas3, bands, avg_method='median')
+avg_pas4 = average_fg(fGroup_pas4, bands, avg_method='median')
 
 corrid_alphas = get_band_peak_fg(fGroup_corrid, bands.alpha)
 incid_alphas = get_band_peak_fg(fGroup_incid, bands.alpha)

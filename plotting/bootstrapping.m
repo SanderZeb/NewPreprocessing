@@ -31,6 +31,9 @@ catch
     addpath('C:\Users\user\Documents\GitHub\NewPreprocessing\additional_scripts\Export  import\');
     exportingTFData(settings.paradigm);
 end
+%%% WARNING!
+% load('D:\Drive\5 - Scenes\tfdata\corrected_exp5_scenes_alpha.mat')
+% all = new_alpha;
 
 
 %%
@@ -38,7 +41,10 @@ if settings.paradigm == 3
     [all.identification2] = all.corr_corr; all = orderfields(all,[1:2,8,3:7]); all = rmfield(all,'corr_corr');
 end
 if settings.paradigm == 5
-    [all.identification2] = all.id2; all = orderfields(all,[1:7,12,8:11]); all = rmfield(all,'id2');
+    %[all.identification2] = all.id2; 
+    [all.identification2] = all.accuracy; 
+    %all = orderfields(all,[1:7,12,8:11]); 
+    %all = rmfield(all,'id2');
 end
 
 listTFData=dir([pathTFData 'tfdata*.mat'  ]);
@@ -67,6 +73,8 @@ end
 settings.bootstraps = 1000; % number of bootstraps
 settings.participants_in_batch = 0;
 settings.participants = unique([all.participant]);
+settings.threshold_lme = 0.05;
+
 %settings.formula1 = 'alpha_zscore~identification2+(1|participant)';
 %settings.formula2 = 'alpha_zscore~pas+(1|participant)';
 %settings.formula3 = 'alpha_zscore~identification2+(1|participant)+(identification2-1|epoch)';
@@ -126,7 +134,7 @@ tbl = struct2table(all)
             tbl_idx2 = any(tbl_idx, 2);
             newtable = tbl(tbl_idx2, :);
             
-            addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
+            addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
             lme1 = fitlm(newtable.identification2, newtable.alpha_dB);
             lme2 = fitlm(newtable.pas, newtable.alpha_dB);
             lme3 = fitlme(newtable, settings.formula1);
@@ -174,7 +182,7 @@ tbl = struct2table(all)
                 tbl_idx2 = any(tbl_idx, 2);
                 newtable = tbl(tbl_idx2, :);
                 
-                addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
+                addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
                 lme1 = fitlm(newtable.identification2, newtable.alpha_dB);
                 lme2 = fitlm(newtable.pas, newtable.alpha_dB);
                 lme3 = fitlme(newtable, settings.formula1);
@@ -203,9 +211,9 @@ tbl = struct2table(all)
             
         end
         
-        significant_vals.identification_lme = [p_value_formula1_identification_lme] <0.01
+        significant_vals.identification_lme = [p_value_formula1_identification_lme] < settings.threshold_lme;
         significant_vals.identification = [p_value_formula1_identification] <0.05
-        significant_vals.pas_lme = [p_value_formula2_pas_lme] <0.01
+        significant_vals.pas_lme = [p_value_formula2_pas_lme] <settings.threshold_lme;
         significant_vals.pas = [p_value_formula2_pas] <0.05
         
         significant_vals.identification_lme_sum = sum(significant_vals.identification_lme.')
@@ -229,7 +237,7 @@ tbl = struct2table(all)
                 tbl_idx2 = any(tbl_idx, 2);
                 newtable = tbl(tbl_idx2, :);
                 
-                addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
+                addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
                 lme1 = fitlm(newtable.identification2, newtable.alpha_dB);
                 lme2 = fitlm(newtable.pas, newtable.alpha_dB);
                 lme3 = fitlme(newtable, settings.formula1);
@@ -258,9 +266,9 @@ tbl = struct2table(all)
             
         end
         
-        significant_vals.identification_lme = [p_value_formula1_identification_lme] <0.01
+        significant_vals.identification_lme = [p_value_formula1_identification_lme] <settings.threshold_lme;
         significant_vals.identification = [p_value_formula1_identification] <0.05
-        significant_vals.pas_lme = [p_value_formula2_pas_lme] <0.01
+        significant_vals.pas_lme = [p_value_formula2_pas_lme] <settings.threshold_lme;
         significant_vals.pas = [p_value_formula2_pas] <0.05
         
         significant_vals.identification_lme_sum = sum(significant_vals.identification_lme.')
@@ -314,9 +322,9 @@ end
 
 %%
 
-significant_vals.identification_lme = [p_value_formula1_identification_lme] <0.05
+significant_vals.identification_lme = [p_value_formula1_identification_lme] <settings.threshold_lme;
 significant_vals.identification = [p_value_formula1_identification] <0.05
-significant_vals.pas_lme = [p_value_formula2_pas_lme] <0.05
+significant_vals.pas_lme = [p_value_formula2_pas_lme] <settings.threshold_lme;
 significant_vals.pas = [p_value_formula2_pas] <0.05
 
 significant_vals.identification_lme_sum = sum(significant_vals.identification_lme.')

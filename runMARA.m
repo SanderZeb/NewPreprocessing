@@ -33,7 +33,9 @@ eeglab nogui
 list=dir([pathLoadData '\*.set'  ])
 participants = length(list)
 
-
+addpath('C:\Users\user\Desktop\eeglab2022.0')
+addpath('C:\Program Files\MATLAB\R2022b\toolbox\signal\signal\')
+addpath('C:\Program Files\MATLAB\R2022b\toolbox\stats\stats\')
 for s=[1:participants]
     try
         

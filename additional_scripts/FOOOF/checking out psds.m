@@ -2,50 +2,50 @@
 %start = 'D:\Drive\1 - Threshold';
 %start = 'D:\Drive\4 - Faces';
 start = 'D:\Drive\5 - Scenes';
-root = [ start '\pwelch\pwelch_result\bgr\corrid']
-files = dir(root)
-files = dir([root '\*.mat'])
+root = [ start '\pwelch\pwelch_result\bgr\corrid'];
+files = dir(root);
+files = dir([root '\*.mat']);
 for i=1:length(files)
-    temp = load([root '\' files(i).name])
-    data_corrid(i,:) = temp.corr_id
+    temp = load([root '\' files(i).name]);
+    data_corrid(i,:) = temp.corr_id;
 end
 
 
 %root = [ start '\pwelch\pwelch_result\incid']
-root = [ start '\pwelch\pwelch_result\bgr\incid']
-files = dir(root)
-files = dir([root '\*.mat'])
+root = [ start '\pwelch\pwelch_result\bgr\incid'];
+files = dir(root);
+files = dir([root '\*.mat']);
 for i=1:length(files)
-    temp = load([root '\' files(i).name])
-    data_incid(i,:) = temp.inc_id
+    temp = load([root '\' files(i).name]);
+    data_incid(i,:) = temp.inc_id;
 end
 
 
 
 %root = [ start '\pwelch\pwelch_result\highpas']
-root = [ start '\pwelch\pwelch_result\bgr\highpas']
-files = dir(root)
-files = dir([root '\*.mat'])
+root = [ start '\pwelch\pwelch_result\bgr\highpas'];
+files = dir(root);
+files = dir([root '\*.mat']);
 for i=1:length(files)
-    temp = load([root '\' files(i).name])
-    data_highpas(i,:) = temp.highpas
+    temp = load([root '\' files(i).name]);
+    data_highpas(i,:) = temp.highpas;
 end
 
 
 %root = [ start '\pwelch\pwelch_result\lowpas']
-root = [ start '\pwelch\pwelch_result\bgr\lowpas']
-files = dir(root)
-files = dir([root '\*.mat'])
+root = [ start '\pwelch\pwelch_result\bgr\lowpas'];
+files = dir(root);
+files = dir([root '\*.mat']);
 for i=1:length(files)
-    temp = load([root '\' files(i).name])
-    data_lowpas(i,:) = temp.lowpas
+    temp = load([root '\' files(i).name]);
+    data_lowpas(i,:) = temp.lowpas;
 end
-
-bin_low = min(min(data))
-bin_max = max(max(data))
-
-histogram(data, [bin_low bin_max])
-histogram(mean(data))
+% 
+% bin_low = min(min(data));
+% bin_max = max(max(data));
+% 
+% histogram(data, [bin_low bin_max]);
+% histogram(mean(data));
 
 
 bar(mean(data_corrid))
@@ -64,7 +64,7 @@ bar(median(data_highpas))
 
 bar(median(data_highpas.'))
 bar(mean(data_highpas.'))
-highpas to drop = 74 85 
+%highpas to drop = 74 85 
 data_highpas([74 85 ], :) = []
 
 bar(median(data_lowpas.'))

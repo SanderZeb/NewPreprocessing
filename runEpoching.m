@@ -37,7 +37,7 @@ participants = length(list)
 for s=[1:participants]
     %try
         
-        clear idx
+        clear idx events events2 EEG
         file=list(s).name;
         EEG = pop_loadset('filename',file,'filepath',pathLoadData);
         
@@ -60,6 +60,18 @@ for s=[1:participants]
             EEG = pop_epoch( EEG, {'103', '104'},  epochLim, 'epochinfo', 'yes');
             
         elseif  paradigm == 5
+            events = EEG.event;
+            for i = 1:length(events)
+                if events(i).duration == 0
+                    idx(i) = 1;
+                else
+                    idx(i) = 0;
+                end
+            end
+            events2 = events([idx] == 0);
+            EEG.event = [];
+            EEG.event = events2;
+
             EEG = pop_epoch( EEG, {'20', '21', '120', '121', '40', '41', '140', '141', '80', '81', '180', '181', '30', '31', '130', '131', '50', '51', '150', '151', '90', '91', '190', '191'},  epochLim, 'epochinfo', 'yes');
             
         elseif  paradigm == 6

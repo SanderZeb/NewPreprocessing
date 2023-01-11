@@ -14,7 +14,7 @@ settings.p_val = 0.01;
 % general plotting settings
 settings.limits.up = 0.06;
 settings.limits.down = -0.06;
-settings.prefix = 'more_liberal_'; % additional prefix for naming plots
+settings.prefix = 'phase_'; % additional prefix for naming plots
 
 
 if settings.paradigm == 1
@@ -76,14 +76,21 @@ clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
 
 
 
-for s=1:length(listTFData)
 
+
+for s=1:length(listTFData)
+    if contains(listTFData(s).name, 'tfdata')
     file=listTFData(s).name;
 
     B = regexp(file,'\d*','Match');
     listTFData(s).channel = str2num(B{1, 1})
     listTFData(s).participant = str2num(B{1, 2})
+    idx(s) = 0;
+    else
+        idx(s) = 1;
+    end
 end
+listTFData(logical(idx)) = [];
 
 
 
@@ -94,15 +101,15 @@ close all
 
 try
     if settings.task_type == 1
-        load([savepath 'tfdata_object_before_avg_highpas.mat']);
-        load([savepath 'tfdata_object_before_avg_lowpas.mat']);
-        load([savepath 'tfdata_object_before_avg_corr.mat']);
-        load([savepath 'tfdata_object_before_avg_inc.mat']);
+        load([savepath 'tfdata_object_phase_highpas.mat']);
+        load([savepath 'tfdata_object_phase_avg_lowpas.mat']);
+        load([savepath 'tfdata_object_phase_avg_corr.mat']);
+        load([savepath 'tfdata_object_phase_avg_inc.mat']);
     elseif settings.task_type == 0
-        load([savepath 'tfdata_background_before_avg_highpas.mat']);
-        load([savepath 'tfdata_background_before_avg_lowpas.mat']);
-        load([savepath 'tfdata_background_before_avg_corr.mat']);
-        load([savepath 'tfdata_background_before_avg_inc.mat']);
+        load([savepath 'tfdata_background_phase_avg_highpas.mat']);
+        load([savepath 'tfdata_background_phase_avg_lowpas.mat']);
+        load([savepath 'tfdata_background_phase_avg_corr.mat']);
+        load([savepath 'tfdata_background_phase_avg_inc.mat']);
     end
 
 catch
@@ -114,7 +121,7 @@ catch
             participant_event = events{participantID};
 
 
-
+% 
 %             participant_event = rmfield(participant_event, 'stimulus')
 %             participant_event = rmfield(participant_event, 'trial')
 %             empty_event = cellfun(@isempty, struct2cell(participant_event));
@@ -133,13 +140,13 @@ catch
 %             else
 %                 id_to_drop = [];
 %             end
-
+% 
 %             participant_event([id_to_drop]) = [];
 
 
             temp = load([pathTFData listTFData(s).name]);
             temp2 = temp.tfdata(:,:, [participant_event.epoch]);
-            data = abs(temp2);
+            data = sin(angle(temp2));
             data = data(:,:,:);
 
             for i=1:length(participant_event)
@@ -173,31 +180,31 @@ catch
             clear idx* data temp*
         end
     end
-    save([savepath 'data_all_lowpas_object.mat'], 'data_all_lowpas_object');
-    save([savepath 'data_all_highpas_object.mat'], 'data_all_highpas_object');
-    save([savepath 'data_all_corr_id_object.mat'], 'data_all_corr_id_object');
-    save([savepath 'data_all_inc_id_object.mat'], 'data_all_inc_id_object');
+    save([savepath 'data_phase_lowpas_object.mat'], 'data_all_lowpas_object');
+    save([savepath 'data_phase_highpas_object.mat'], 'data_all_highpas_object');
+    save([savepath 'data_phase_corr_id_object.mat'], 'data_all_corr_id_object');
+    save([savepath 'data_phase_inc_id_object.mat'], 'data_all_inc_id_object');
 
 
-    save([savepath 'data_all_lowpas_background.mat'], 'data_all_lowpas_background');
-    save([savepath 'data_all_highpas_background.mat'], 'data_all_highpas_background');
-    save([savepath 'data_all_corr_id_background.mat'], 'data_all_corr_id_background');
-    save([savepath 'data_all_inc_id_background.mat'], 'data_all_inc_id_background');
+    save([savepath 'data_phase_lowpas_background.mat'], 'data_all_lowpas_background');
+    save([savepath 'data_phase_highpas_background.mat'], 'data_all_highpas_background');
+    save([savepath 'data_phase_corr_id_background.mat'], 'data_all_corr_id_background');
+    save([savepath 'data_phase_inc_id_background.mat'], 'data_all_inc_id_background');
 
 
 end
 
 %% TEST Z BASELINEM
 clear data_all*
-load([savepath 'data_all_lowpas_object.mat']);
-load([savepath 'data_all_highpas_object.mat']);
-load([savepath 'data_all_corr_id_object.mat']);
-load([savepath 'data_all_inc_id_object.mat']);
+load([savepath 'data_phase_lowpas_object.mat']);
+load([savepath 'data_phase_highpas_object.mat']);
+load([savepath 'data_phase_corr_id_object.mat']);
+load([savepath 'data_phase_inc_id_object.mat']);
 
-load([savepath 'data_all_lowpas_background.mat']);
-load([savepath 'data_all_highpas_background.mat']);
-load([savepath 'data_all_corr_id_background.mat']);
-load([savepath 'data_all_inc_id_background.mat']);
+load([savepath 'data_phase_lowpas_background.mat']);
+load([savepath 'data_phase_highpas_background.mat']);
+load([savepath 'data_phase_corr_id_background.mat']);
+load([savepath 'data_phase_inc_id_background.mat']);
 
 for i = 1:size(data_all_corr_id_background, 1)
     for n = 1:size(data_all_corr_id_background, 2)
@@ -248,7 +255,10 @@ for i = 1:size(data_all_corr_id_background, 1)
     end
 end
 
-%heatmap(squeeze(mean(mean(data_baselined, 1, 'omitnan'), 2, 'omitnan'))); colormap jet
+heatmap(squeeze(mean(mean(data_all_lowpas_background, 1, 'omitnan'), 2, 'omitnan'))); colormap jet; grid off;
+heatmap(squeeze(mean(mean(data_all_highpas_background, 1, 'omitnan'), 2, 'omitnan'))); colormap jet; grid off;
+heatmap(squeeze(mean(mean(data_all_corr_id_background, 1, 'omitnan'), 2, 'omitnan'))); colormap jet; grid off;
+heatmap(squeeze(mean(mean(data_all_inc_id_background, 1, 'omitnan'), 2, 'omitnan'))); colormap jet; grid off;
 
 
 
@@ -340,29 +350,16 @@ every_3d_element(mod(every_3d_element,3) == 0) = 0;
 frekwencje(every_3d_element~=0) = " ";
 clear every_3d_element
 
-% to_plot.raw_highpas = (10 * log10(selected_chann_highpas))
-% to_plot.raw_lowpas = (10 * log10(selected_chann_lowpas))
-% to_plot.raw_correct = (10 * log10(selected_chann_corr_id))
-% to_plot.raw_incorrect =  (10 * log10(selected_chann_inc_id))
-%
-%
-% to_plot.difference_objective = [(10 * log10(selected_chann_corr_id))      -      (10 * log10(selected_chann_inc_id))];
-% to_plot.difference_subjective = [(10 * log10(selected_chann_highpas))      -      (10 * log10(selected_chann_lowpas))];
-% if settings.paradigm == 4
-% to_plot.raw_fearfull =(10 * log10(selected_chann_fearfull))
-% to_plot.raw_neutral = (10 * log10(selected_chann_neutral))
-%     to_plot.additional = [(10 * log10(selected_chann_fearfull))      -      (10 * log10(selected_chann_neutral))];
-%
-% end
-to_plot.raw_highpas_obj = selected_chann_highpas_obj
-to_plot.raw_lowpas_obj = selected_chann_lowpas_obj
-to_plot.raw_correct_obj = selected_chann_corr_id_obj
-to_plot.raw_incorrect_obj =  selected_chann_inc_id_obj
 
-to_plot.raw_highpas_bg = selected_chann_highpas_bg
-to_plot.raw_lowpas_bg = selected_chann_lowpas_bg
-to_plot.raw_correct_bg = selected_chann_corr_id_bg
-to_plot.raw_incorrect_bg =  selected_chann_inc_id_bg
+to_plot.raw_highpas_obj = selected_chann_highpas_obj;
+to_plot.raw_lowpas_obj = selected_chann_lowpas_obj;
+to_plot.raw_correct_obj = selected_chann_corr_id_obj;
+to_plot.raw_incorrect_obj =  selected_chann_inc_id_obj;
+
+to_plot.raw_highpas_bg = selected_chann_highpas_bg;
+to_plot.raw_lowpas_bg = selected_chann_lowpas_bg;
+to_plot.raw_correct_bg = selected_chann_corr_id_bg;
+to_plot.raw_incorrect_bg =  selected_chann_inc_id_bg;
 
 to_plot.difference_objective_obj = [selected_chann_corr_id_obj     -        selected_chann_inc_id_obj];
 to_plot.difference_subjective_obj = [selected_chann_highpas_obj      -      selected_chann_lowpas_obj];
@@ -381,15 +378,16 @@ for i=1:length(fnames)
     m = length(settings.freqs);
     n = size(settings.times, 2);
     temp_data = to_plot.(fnames{i,1});
-    settings.prefix = 'baseline';
+    % settings.prefix = 'baseline';
     %temp_data = to_plot.(fnames{i,1})(1:8, :);
     fig = figure('Position', [0 0 ss(3) ss(4)], 'Visible', 'off');
     %heatmap(temp_data, 'ColorLimits',[-1 1])
-    if contains((fnames{i,1}), 'difference')
-        heatmap(temp_data, 'ColorLimits',[-2 2])
-    else
-        heatmap(temp_data, 'ColorLimits',[-8 6])
-    end
+%     if contains((fnames{i,1}), 'difference')
+%         heatmap(temp_data, 'ColorLimits',[-2 2])
+%     else
+%         heatmap(temp_data, 'ColorLimits',[-8 6])
+%     end
+    heatmap(temp_data, 'ColorLimits',[-0.5 0.5])
     colormap('jet')
     grid off
     %xline(100.5)

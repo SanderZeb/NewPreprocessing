@@ -34,7 +34,7 @@ close all
 %settings.times_roi = times >= -650 & times <= -50;
 %settings.times_roi = times >= -1250 & times <= -700;
 %settings.freqs_roi = freqs>= 8 & freqs <= 14;
-settings.times_roi = times >= -800 & times <= 0;
+settings.times_roi = times >= -800 & times <= -400;
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
@@ -110,7 +110,6 @@ for i = 1:length(events)
     participant_event = events{1, i}
     clear empty_event
 
-    %participant_event = rmfield(participant_event, 'stimulus');
 
     empty_event = cellfun(@isempty, struct2cell(participant_event));
     empty_events(s) = sum(sum(empty_event));
@@ -136,14 +135,14 @@ for i = 1:length(events)
     %test(i).eventssss = participant_event(end).epoch;;
 end
 
-idx_selected_channels = any([listTFData.channel] == settings.selected_channels.')
-new_list = listTFData(idx_selected_channels)
-T = struct2table(new_list)
-sortedT = sortrows(T, 'participant')
-new_list = table2struct(sortedT)
+idx_selected_channels = any([listTFData.channel] == settings.selected_channels.');
+new_list = listTFData(idx_selected_channels);
+T = struct2table(new_list);
+sortedT = sortrows(T, 'participant');
+new_list = table2struct(sortedT);
 
 %% calculate real and imaginary part of complex numbers to phase and magnitude of frequency
-all = []
+all = [];
 n=1;
 error_rate = 0;
 for s=1:length(new_list)
@@ -155,6 +154,7 @@ for s=1:length(new_list)
 
 
     participant_event = rmfield(participant_event, 'stimulus');
+    participant_event = rmfield(participant_event, 'trial');
     clear empty_event  id_to_drop
     empty_event = cellfun(@isempty, struct2cell(participant_event));
     empty_events(s) = sum(sum(empty_event));
@@ -202,6 +202,8 @@ for s=1:length(new_list)
         participant_event_clean = rmfield(participant_event_clean, 'identification');
         %participant_event_clean = rmfield(participant_event_clean, 'version');
         %participant_event_clean = rmfield(participant_event_clean, 'task_order');
+        %participant_event = rmfield(participant_event, 'stimulus');
+        %participant_event = rmfield(participant_event, 'trial');
         [participant_event_clean.id2] = participant_event_clean.corrected_id;
         participant_event_clean = rmfield(participant_event_clean,'corrected_id');
 
@@ -238,7 +240,7 @@ end
 
 
 
-writetable(struct2table(all), ['D:\export\exp5_scenes_alpha.csv'])
+writetable(struct2table(all), ['D:\export\corrected_exp5_scenes_alpha.csv'])
 
-save([pathTFData '\exp5_scenes_alpha.mat'],'all')
+save([pathTFData '\corrected_exp5_scenes_alpha.mat'],'all')
 
