@@ -1,5 +1,5 @@
 clear all
-settings.paradigm = 4;
+settings.paradigm = 5;
 settings.epochsToAdjust = 0;
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
@@ -16,7 +16,7 @@ elseif settings.paradigm == 5
     root = 'D:\Drive\5 - Scenes\';
     dropout = [56 74 91];
 end
-pathdata = [root '\pwelch\']
+pathdata = [root '\pwelch_adjusted_timewindow\']
 mkdir([pathdata, '\pwelch_result'])
 pathSaveData = [pathdata '\pwelch_result\']
 pathEEGData = [root '\MARA\'];

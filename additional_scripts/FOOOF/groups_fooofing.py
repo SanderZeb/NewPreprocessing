@@ -29,6 +29,7 @@ from fooof.plts.spectra import plot_spectra_shading
 # root = r'D:\Drive\4 - Faces'
 root = r'D:\Drive\5 - Scenes'
 
+supp_path = r'pwelch_adjusted_timewindow'
 
 bands = Bands({'delta' : [1, 4],
                'theta' : [4, 8],
@@ -78,27 +79,27 @@ warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 freqs_dict = loadmat(r'D:\freqs_mean.mat') #prestimulus part
 
 
-# pathdata_corrid = rf'{root}\pwelch\pwelch_result\corrid'
-# pathdata_incid = rf'{root}\pwelch\pwelch_result\incid'
-# pathdata_highpas = rf'{root}\pwelch\pwelch_result\highpas'
-# pathdata_lowpas = rf'{root}\pwelch\pwelch_result\lowpas'
-# pathdata_pas1 = rf'{root}\pwelch\pwelch_result\pas1'
-# pathdata_pas2 = rf'{root}\pwelch\pwelch_result\pas2'
-# pathdata_pas3 = rf'{root}\pwelch\pwelch_result\pas3'
-# pathdata_pas4 = rf'{root}\pwelch\pwelch_result\pas4'
+# pathdata_corrid = rf'{root}\{supp_path}\pwelch_result\corrid'
+# pathdata_incid = rf'{root}\{supp_path}\pwelch_result\incid'
+# pathdata_highpas = rf'{root}\{supp_path}\pwelch_result\highpas'
+# pathdata_lowpas = rf'{root}\{supp_path}\pwelch_result\lowpas'
+# pathdata_pas1 = rf'{root}\{supp_path}\pwelch_result\pas1'
+# pathdata_pas2 = rf'{root}\{supp_path}\pwelch_result\pas2'
+# pathdata_pas3 = rf'{root}\{supp_path}\pwelch_result\pas3'
+# pathdata_pas4 = rf'{root}\{supp_path}\pwelch_result\pas4'
 
 
 
 # task_type = "bgr";
 task_type = "obj";
-pathdata_corrid = rf'{root}\pwelch\pwelch_result\{task_type}\corrid'
-pathdata_incid = rf'{root}\pwelch\pwelch_result\{task_type}\incid'
-pathdata_highpas = rf'{root}\pwelch\pwelch_result\{task_type}\highpas'
-pathdata_lowpas = rf'{root}\pwelch\pwelch_result\{task_type}\lowpas'
-pathdata_pas1 = rf'{root}\pwelch\pwelch_result\{task_type}\pas1'
-pathdata_pas2 = rf'{root}\pwelch\pwelch_result\{task_type}\pas2'
-pathdata_pas3 = rf'{root}\pwelch\pwelch_result\{task_type}\pas3'
-pathdata_pas4 = rf'{root}\pwelch\pwelch_result\{task_type}\pas4'
+pathdata_corrid = rf'{root}\{supp_path}\pwelch_result\{task_type}\corrid'
+pathdata_incid = rf'{root}\{supp_path}\pwelch_result\{task_type}\incid'
+pathdata_highpas = rf'{root}\{supp_path}\pwelch_result\{task_type}\highpas'
+pathdata_lowpas = rf'{root}\{supp_path}\pwelch_result\{task_type}\lowpas'
+pathdata_pas1 = rf'{root}\{supp_path}\pwelch_result\{task_type}\pas1'
+pathdata_pas2 = rf'{root}\{supp_path}\pwelch_result\{task_type}\pas2'
+pathdata_pas3 = rf'{root}\{supp_path}\pwelch_result\{task_type}\pas3'
+pathdata_pas4 = rf'{root}\{supp_path}\pwelch_result\{task_type}\pas4'
 
 
 onlyfiles_corrid = [f for f in listdir(pathdata_corrid) if isfile(join(pathdata_corrid, f))]

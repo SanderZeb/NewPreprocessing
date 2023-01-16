@@ -1,13 +1,23 @@
 clear all
+% 
+% results_exp1 = readtable('D:\Drive\1 - Threshold\pwelch\pwelch_result\csv_export\results.csv')
+% results_exp3 = readtable('D:\Drive\3 - Mask\pwelch\pwelch_result\csv_export\results.csv')
+% 
+% settings.plot_4th = 1;
+% if settings.plot_4th == 1
+%     results_exp4 = readtable('D:\Drive\4 - Faces\pwelch\pwelch_result\csv_export\results.csv')
+%     results_exp5_obj = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\csv_export\results.csv')
+%     results_exp5_bgr = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\bgr\csv_export\results.csv')
+% end
 
-results_exp1 = readtable('D:\Drive\1 - Threshold\pwelch\pwelch_result\csv_export\results.csv')
-results_exp3 = readtable('D:\Drive\3 - Mask\pwelch\pwelch_result\csv_export\results.csv')
+results_exp1 = readtable('D:\Drive\1 - Threshold\\pwelch_adjusted_timewindow\pwelch_result\csv_export\results.csv')
+results_exp3 = readtable('D:\Drive\3 - Mask\pwelch_adjusted_timewindow\\pwelch_result\csv_export\results.csv')
 
 settings.plot_4th = 1;
 if settings.plot_4th == 1
-    results_exp4 = readtable('D:\Drive\4 - Faces\pwelch\pwelch_result\csv_export\results.csv')
-    results_exp5_obj = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\csv_export\results.csv')
-    results_exp5_bgr = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\bgr\csv_export\results.csv')
+    results_exp4 = readtable('D:\Drive\4 - Faces\\pwelch_adjusted_timewindow\pwelch_result\csv_export\results.csv')
+    results_exp5_obj = readtable('D:\Drive\5 - Scenes\\pwelch_adjusted_timewindow\pwelch_result\obj\csv_export\results.csv')
+    results_exp5_bgr = readtable('D:\Drive\5 - Scenes\\pwelch_adjusted_timewindow\pwelch_result\bgr\csv_export\results.csv')
 end
 
 
@@ -743,14 +753,14 @@ hold off;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-results_exp1 = readtable('D:\Drive\1 - Threshold\pwelch\pwelch_result\csv_export\results.csv')
-results_exp3 = readtable('D:\Drive\3 - Mask\pwelch\pwelch_result\csv_export\results.csv')
+results_exp1 = readtable('D:\Drive\1 - Threshold\pwelch_adjusted_timewindow\pwelch_result\csv_export\results.csv')
+results_exp3 = readtable('D:\Drive\3 - Mask\pwelch_adjusted_timewindow\pwelch_result\csv_export\results.csv')
 
 settings.plot_4th = 1;
 if settings.plot_4th == 1
-    results_exp4 = readtable('D:\Drive\4 - Faces\pwelch\pwelch_result\csv_export\results.csv')
-    results_exp5_obj = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\obj\csv_export\results.csv')
-    results_exp5_bgr = readtable('D:\Drive\5 - Scenes\pwelch\pwelch_result\bgr\csv_export\results.csv')
+    results_exp4 = readtable('D:\Drive\4 - Faces\pwelch_adjusted_timewindow\pwelch_result\csv_export\results.csv')
+    results_exp5_obj = readtable('D:\Drive\5 - Scenes\pwelch_adjusted_timewindow\pwelch_result\obj\csv_export\results.csv')
+    results_exp5_bgr = readtable('D:\Drive\5 - Scenes\pwelch_adjusted_timewindow\pwelch_result\bgr\csv_export\results.csv')
 end
 
 
