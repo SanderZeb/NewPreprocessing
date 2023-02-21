@@ -1,8 +1,8 @@
 settings.paradigm = 5;
-settings.inverted = 1;
+settings.inverted = 0;
 settings.intercept = 0;
-settings.phase = 1;
-settings.absolutePower = 0;
+settings.phase = 0;
+settings.absolutePower = 1;
 
 if settings.paradigm == 1
     root = 'D:\Drive\1 - Threshold\';
@@ -25,8 +25,8 @@ if settings.inverted== 1 & settings.intercept== 1
         pathBETAS_phase = [root '\tfdata\betas_phase_odwrotne_intercept\']
     end
 elseif settings.inverted== 1 & settings.intercept== 0
-    mkdir(pathTFData, 'betas_odwrotne');
-    pathBETAS = [root '\tfdata\betas_odwrotne\']
+    mkdir(pathTFData, 'betas_odwrotne_nozscore');
+    pathBETAS = [root '\tfdata\betas_odwrotne_nozscore\']
     if settings.phase == 1
         mkdir(pathTFData, 'betas_phase_odwrotne');
         pathBETAS_phase = [root '\tfdata\betas_phase_odwrotne\']
@@ -39,8 +39,8 @@ elseif settings.inverted == 0 & settings.intercept== 1
         pathBETAS_phase = [root '\tfdata\betas_phase_intercept\']
     end
 elseif settings.inverted== 0 & settings.intercept== 0
-    mkdir(pathTFData, 'betas');
-    pathBETAS = [root '\tfdata\betas\']
+    mkdir(pathTFData, 'betas_nozscore\');
+    pathBETAS = [root '\tfdata\betas_nozscore\\']
     if settings.phase == 1
         mkdir(pathTFData, 'betas_phase');
         pathBETAS_phase = [root '\tfdata\betas_phase\']
@@ -53,6 +53,7 @@ addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
 eeglab nogui
 
 listTFData=dir([pathTFData '*.mat'  ]);
+listTFData(1) = []
 listEEGData=dir([pathEEGData '*.set'  ]);
 participants = length(listEEGData)
 
@@ -387,31 +388,54 @@ for s=1:length(listTFData)
 
         addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
 
-        x_standarized_object(:, 1) = zscore(x_tt_object(:, 5)); % PAS
-        x_standarized_object(:, 2) = zscore(x_tt_object(:, 8)); % identifiction / accuracy
-        x_standarized_object(:, 3) = zscore(x_tt_object(:, 1)); % object animal / object
-        x_standarized_object(:, 4) = zscore(x_tt_object(:, 3)); % background artificial / natural
-        x_standarized_object(:, 5) = zscore(x_tt_object(:, 2)); % duration
-        x_standarized_object(:, 6) = zscore(x_tt_object(:, 4)); % congruency
+%         x_standarized_object(:, 1) = zscore(x_tt_object(:, 5)); % PAS
+%         x_standarized_object(:, 2) = zscore(x_tt_object(:, 8)); % identifiction / accuracy
+%         x_standarized_object(:, 3) = zscore(x_tt_object(:, 1)); % object animal / object
+%         x_standarized_object(:, 4) = zscore(x_tt_object(:, 3)); % background artificial / natural
+%         x_standarized_object(:, 5) = zscore(x_tt_object(:, 2)); % duration
+%         x_standarized_object(:, 6) = zscore(x_tt_object(:, 4)); % congruency
+%         x_standarized_object(:, 7) = x_standarized_object(:, 1) .* x_standarized_object(:, 5); % PAS x DURATION
+%         x_standarized_object(:, 8) = x_standarized_object(:, 2) .* x_standarized_object(:, 5); % ID x DURATION
+%         x_standarized_object(:, 9) = x_standarized_object(:, 1) .* x_standarized_object(:, 2); % ID x pas
+%         x_standarized_object(:, 10) = zscore(x_tt_object(:, 6)) ; % obj/bgr response RT
+%         x_standarized_object(:, 11) = zscore(x_tt_object(:, 7)) ; % pas response RT
+% 
+% 
+%         x_standarized_background(:, 1) = zscore(x_tt_background(:, 5)); % PAS
+%         x_standarized_background(:, 2) = zscore(x_tt_background(:, 8)); % identifiction / accuracy
+%         x_standarized_background(:, 3) = zscore(x_tt_background(:, 1)); % object animal / object
+%         x_standarized_background(:, 4) = zscore(x_tt_background(:, 3)); % background artificial / natural
+%         x_standarized_background(:, 5) = zscore(x_tt_background(:, 2)); % duration
+%         x_standarized_background(:, 6) = zscore(x_tt_background(:, 4)); % congruency
+%         x_standarized_background(:, 7) = x_standarized_background(:, 1) .* x_standarized_background(:, 5); % PAS x DURATION
+%         x_standarized_background(:, 8) = x_standarized_background(:, 2) .* x_standarized_background(:, 5); % ID x DURATION
+%         x_standarized_background(:, 9) = x_standarized_background(:, 1) .* x_standarized_background(:, 2); % ID x pas
+%         x_standarized_background(:, 10) = zscore(x_tt_background(:, 6)) ; % obj/bgr response RT
+%         x_standarized_background(:, 11) = zscore(x_tt_background(:, 7)) ; % pas response RT
+        x_standarized_object(:, 1) = (x_tt_object(:, 5)); % PAS
+        x_standarized_object(:, 2) = (x_tt_object(:, 8)); % identifiction / accuracy
+        x_standarized_object(:, 3) = (x_tt_object(:, 1)); % object animal / object
+        x_standarized_object(:, 4) = (x_tt_object(:, 3)); % background artificial / natural
+        x_standarized_object(:, 5) = (x_tt_object(:, 2)); % duration
+        x_standarized_object(:, 6) = (x_tt_object(:, 4)); % congruency
         x_standarized_object(:, 7) = x_standarized_object(:, 1) .* x_standarized_object(:, 5); % PAS x DURATION
         x_standarized_object(:, 8) = x_standarized_object(:, 2) .* x_standarized_object(:, 5); % ID x DURATION
         x_standarized_object(:, 9) = x_standarized_object(:, 1) .* x_standarized_object(:, 2); % ID x pas
-        x_standarized_object(:, 10) = zscore(x_tt_object(:, 6)) ; % obj/bgr response RT
-        x_standarized_object(:, 11) = zscore(x_tt_object(:, 7)) ; % pas response RT
+        x_standarized_object(:, 10) = (x_tt_object(:, 6)) ; % obj/bgr response RT
+        x_standarized_object(:, 11) = (x_tt_object(:, 7)) ; % pas response RT
 
 
-        x_standarized_background(:, 1) = zscore(x_tt_background(:, 5)); % PAS
-        x_standarized_background(:, 2) = zscore(x_tt_background(:, 8)); % identifiction / accuracy
-        x_standarized_background(:, 3) = zscore(x_tt_background(:, 1)); % object animal / object
-        x_standarized_background(:, 4) = zscore(x_tt_background(:, 3)); % background artificial / natural
-        x_standarized_background(:, 5) = zscore(x_tt_background(:, 2)); % duration
-        x_standarized_background(:, 6) = zscore(x_tt_background(:, 4)); % congruency
+        x_standarized_background(:, 1) = (x_tt_background(:, 5)); % PAS
+        x_standarized_background(:, 2) = (x_tt_background(:, 8)); % identifiction / accuracy
+        x_standarized_background(:, 3) = (x_tt_background(:, 1)); % object animal / object
+        x_standarized_background(:, 4) = (x_tt_background(:, 3)); % background artificial / natural
+        x_standarized_background(:, 5) = (x_tt_background(:, 2)); % duration
+        x_standarized_background(:, 6) = (x_tt_background(:, 4)); % congruency
         x_standarized_background(:, 7) = x_standarized_background(:, 1) .* x_standarized_background(:, 5); % PAS x DURATION
         x_standarized_background(:, 8) = x_standarized_background(:, 2) .* x_standarized_background(:, 5); % ID x DURATION
         x_standarized_background(:, 9) = x_standarized_background(:, 1) .* x_standarized_background(:, 2); % ID x pas
-        x_standarized_background(:, 10) = zscore(x_tt_background(:, 6)) ; % obj/bgr response RT
-        x_standarized_background(:, 11) = zscore(x_tt_background(:, 7)) ; % pas response RT
-
+        x_standarized_background(:, 10) = (x_tt_background(:, 6)) ; % obj/bgr response RT
+        x_standarized_background(:, 11) = (x_tt_background(:, 7)) ; % pas response RT
 
 
         for (k=1:length(settings.times))

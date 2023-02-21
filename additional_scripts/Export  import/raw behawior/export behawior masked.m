@@ -45,13 +45,12 @@ for s=1:length(listEEGData1)
                 display('check manually');
             end
         else
-
             display('check manually');
         end
     end
     if length(listBehawior2) > 0
-
         beh_all = cat(2, beh_all, (listBehawior2));
+        listBehawior2 = [] ;
     end
 end
 
@@ -69,7 +68,7 @@ opts.Delimiter = ",";
 
 % Specify column names and types
 opts.VariableNames = ["x", "y", "orientation", "thisRepN", "thisTrialN", "thisN", "thisIndex", "stepSize", "intensity", "image_name", "global_start_time", "global_end_time", "pressKey", "pressRT", "releaseRT", "image_started", "image_ended", "name", "globalTime", "fixation_dur", "stimulation_dur", "post_fixation", "opacity", "orientationResponse_pressKey", "orientationResponse_pressRT", "orientationResponse_releaseRT", "pasResponse_pressKey", "pasResponse_pressRT", "pasResponse_releaseRT", "response", "finalOpacity", "postOri", "ID", "frameRate", "VarName35"];
-opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "string", "double", "double", "double", "double", "double", "double", "double", "categorical", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "string"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "string", "double", "double", "double", "double", "double", "double", "double", "categorical", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "string", "double", "string"];
 
 % Specify file level properties
 opts.ExtraColumnsRule = "ignore";

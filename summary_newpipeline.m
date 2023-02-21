@@ -28,9 +28,18 @@ pathLoadData_MARA=[root '\MARA\additional_info\'];
 pathLoadData_chans=[root '\Preprocessed_new_pipeline\additional_info'];
 pathLoadData_trials=[root '\Epoching_EpochRejection\additional_info'];
 list_MARA=dir([pathLoadData_MARA '\MARA_components*.mat'  ]);
-list_chans=dir([pathLoadData_chans '\removed_channels*.mat'  ]);
+list_chans=dir([pathLoadData_chans '\removed_channels*.bdf.mat'  ]);
 list_trials=dir([pathLoadData_trials '\removed_trials*.mat'  ]);
 savePath = [pathLoadData_MARA, '\'];
+
+if settings.paradigm == 5
+    list_chans(42) = [];
+    list_chans(47) = [];
+    list_MARA(18) = [];
+    list_MARA(42) = [];
+    list_MARA(47) = [];
+end
+
 participants_MARA = length(list_MARA);
 participants_chans = length(list_chans);
 participants_trials = length(list_trials);

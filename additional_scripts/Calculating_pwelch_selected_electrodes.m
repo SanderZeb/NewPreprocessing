@@ -1,4 +1,4 @@
-
+ 
 for curr_paradigm = [2:4]
     if curr_paradigm == 1
         settings.paradigm = 1;

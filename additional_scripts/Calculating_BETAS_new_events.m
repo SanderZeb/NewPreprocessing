@@ -1,7 +1,7 @@
-settings.paradigm = 1;
-settings.inverted = 1;
+settings.paradigm = 3;
+settings.inverted = 0;
 settings.intercept = 0;
-settings.confirmatory = 1;
+settings.confirmatory = 0;
 %
 % if n ==1
 %     settings.inverted = 1;
@@ -56,7 +56,7 @@ listEEGData=dir([pathEEGData '*.set'  ]);
 participants = length(listEEGData)
 
 try
-    load([root 'events.mat'])
+    load([root 'events_new.mat'])
     fileEEGData=listEEGData(1).name;
     EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
 catch
@@ -93,65 +93,107 @@ for s=1:length(listTFData)
 end
 
 [~,~,~,settings.times,settings.freqs,~,~] = newtimef(EEG.data(1,:,:), EEG.pnts, [EEG.xmin EEG.xmax]*1000, EEG.srate, [3 8], 'freqs', [6 40], 'baseline', NaN);
-clear temp data y* x* beta* EEG B file s
+clear temp data_timef y* x* beta* EEG B file s
 close all
-for s=1:length(listTFData)
+    clear temp data_timef y* x* beta* empty* participant_event participantID channel id_to_drop
+for s=s:length(listTFData)
     participantID = listTFData(s).participant;
     channel = listTFData(s).channel;
-    participant_event = events{participantID};
+    
+    if ~isempty(events_new{1, participantID}) & size(events_new{1, participantID},1) ~= 0  & ~any(participantID==[163]) % ~any(participantID==[31 40 41 42 66 103 130 142 145 162 163 164 165 166 167 168])
+    participant_event = events_new{1, participantID};
     temp = load([pathTFData listTFData(s).name]);
-    data = abs(temp.tfdata);
+    data_timef = abs(temp.tfdata);
     
     
     
-    to_include = [participant_event.epoch];
+    %to_include = [participant_event.epoch];
     
-    data = data(:,:,to_include);
+    %data_timef = data_timef(:,:,to_include);
+    %data_timef = data_timef(:,:,:);
     
     
+    participant_event = removevars(participant_event, ["thisRepN","thisTrialN","thisN","thisIndex","stepSize","intensity","image_name","global_start_time", ...
+        "global_end_time","pressKey","pressRT","releaseRT","image_started","image_ended","name","globalTime","fixation_dur","stimulation_dur","post_fixation", ...
+        "opacity","orientationResponse_pressRT","orientationResponse_releaseRT","pasResponse_pressRT","pasResponse_releaseRT","response","finalOpacity","postOri", ...
+        "ID","frameRate","VarName35", "urevent", "latency", "x", "y"]);
+
     x = participant_event;
-    x = rmfield(x, 'type');
-    x = rmfield(x, 'latency');
-    x = rmfield(x, 'urevent');
-    x = rmfield(x, 'epoch');
-    
-    
-    x = rmfield(x, 'identification');
-    if settings.paradigm == 1 | settings.paradigm == 2
-        x = rmfield(x, 'detection');
-        %x = rmfield(x, 'identification2');
-        x = rmfield(x, 'corr_corr');
-        %x = rmfield(x, 'oldepoch');
+
+    for i=1:size(x, 1)
+        if x.orientationResponse_pressKey(i) == 0
+            x.resp(i) = 100;
+        elseif x.orientationResponse_pressKey(i) == 1
+            x.resp(i) = 101;
+        elseif x.orientationResponse_pressKey(i) == 6
+            x.resp(i) = 106;
+        elseif x.orientationResponse_pressKey(i) == 7
+            x.resp(i) = 107;
+        end
+
+        if x.pasResponse_pressKey(i) == 0
+            x.pas(i) = 1;
+        elseif x.pasResponse_pressKey(i) == 1
+            x.pas(i) = 2;
+        elseif x.pasResponse_pressKey(i) == 6
+            x.pas(i) = 3;
+        elseif x.pasResponse_pressKey(i) == 7
+            x.pas(i) = 4;
+        end
+
+        if x.type(i) == x.resp(i)
+            x.corr_corr(i) = 1;
+        else
+            x.corr_corr(i) = 0;
+        end
+
+
+
     end
-    
-    if settings.paradigm == 3 | settings.paradigm == 4
-        x = rmfield(x, 'stimulus');
-    end
-    empty_event = cellfun(@isempty, struct2cell(x));
-    empty_events(s) = sum(sum(empty_event));
-    
-    if sum(sum(empty_event)) > 0
-        empty_event = squeeze(empty_event)';
-        [empty_event_r, empty_event_c] = find(empty_event==1);
-        %         if length(unique(empty_event_r)) == 1
-        %             x([unique(empty_event_r)]).pas = 1;
-        %             x([unique(empty_event_r)]).detection2 = 0;
-        %             x([unique(empty_event_r)]).identification2 = 0;
-        %
-        %         end
-        id_to_drop = unique(empty_event_r)
-    else
-        id_to_drop = [];
-    end
-    
-    x([id_to_drop]) = [];
-    try
-        x = single(transpose(cell2mat(squeeze(struct2cell(x)))));
-    catch
-        x = single(transpose(table2array(cell2table(squeeze(struct2cell(x))))));
-    end
-    
-    
+    x = removevars(x, ["type","orientation","orientationResponse_pressKey","pasResponse_pressKey","resp","epoch"]);
+
+%     x = rmfield(x, 'type');
+%     x = rmfield(x, 'latency');
+%     x = rmfield(x, 'urevent');
+%     x = rmfield(x, 'epoch');
+%     
+%     
+%     x = rmfield(x, 'identification');
+%     if settings.paradigm == 1 | settings.paradigm == 2
+%         x = rmfield(x, 'detection');
+%         %x = rmfield(x, 'identification2');
+%         x = rmfield(x, 'corr_corr');
+%         %x = rmfield(x, 'oldepoch');
+%     end
+%     
+%     if settings.paradigm == 3 | settings.paradigm == 4
+%         x = rmfield(x, 'stimulus');
+%     end
+%     empty_event = cellfun(@isempty, struct2cell(x));
+%     empty_events(s) = sum(sum(empty_event));
+%     
+%     if sum(sum(empty_event)) > 0
+%         empty_event = squeeze(empty_event)';
+%         [empty_event_r, empty_event_c] = find(empty_event==1);
+%         %         if length(unique(empty_event_r)) == 1
+%         %             x([unique(empty_event_r)]).pas = 1;
+%         %             x([unique(empty_event_r)]).detection2 = 0;
+%         %             x([unique(empty_event_r)]).identification2 = 0;
+%         %
+%         %         end
+%         id_to_drop = unique(empty_event_r)
+%     else
+%         id_to_drop = [];
+%     end
+%     
+%     x([id_to_drop]) = [];
+%     try
+%         x = single(transpose(cell2mat(squeeze(struct2cell(x)))));
+%     catch
+%         x = single(transpose(table2array(cell2table(squeeze(struct2cell(x))))));
+%     end
+    id_to_drop = [];
+ x = single(transpose(table2array(x))).';   
     
     
     if settings.intercept == 1
@@ -179,7 +221,7 @@ for s=1:length(listTFData)
         for (k=1:length(settings.times))
             for(j=1:length(settings.freqs))
                 clear y* ;
-                y = squeeze(data(j,k,:));
+                y = squeeze(data_timef(j,k,:));
                 if length(x) ~= length(y)
                     y(id_to_drop) = [];
                 end
@@ -243,9 +285,8 @@ for s=1:length(listTFData)
         for (k=1:length(settings.times))
             for(j=1:length(settings.freqs))
                 clear y* ;
-                y = squeeze(data(j,k,:));
-%                 y = squeeze(data(j,k,:)).^2      ;  
-%                 y = 10 * log10(y) ;
+                y = squeeze(data_timef(j,k,:));
+                y(id_to_drop) = [];
                 y_standarized = zscore(y);
                 %beta= mvregress( x_standarized,y_standarized); % mvregress(X, Y)
                 if settings.inverted == 0
@@ -268,7 +309,7 @@ for s=1:length(listTFData)
             end
         end
         display(['procesujê: ' num2str(s) ' z ' num2str(length(listTFData)) ]);
-        display(['currently found ' num2str(sum(empty_events)) ]);
+        %display(['currently found ' num2str(sum(empty_events)) ]);
         if settings.paradigm == 1 | settings.paradigm == 2
             save([pathBETAS num2str(participantID) '_Betas_pas_chann_' num2str(channel)], 'beta_pas')
             save([pathBETAS num2str(participantID) '_Betas_detection_chann_' num2str(channel)], 'beta_detection')
@@ -278,6 +319,6 @@ for s=1:length(listTFData)
             save([pathBETAS num2str(participantID) '_Betas_identification_chann_' num2str(channel)], 'beta_identification')
         end
     end
-    clear temp data y* x* beta* empty* participant_event participantID channel id_to_drop
-    
+    clear temp data_timef y* x* beta* empty* participant_event participantID channel id_to_drop
+    end
 end

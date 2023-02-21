@@ -12,13 +12,22 @@ end
 
 
 for i = 1:length(list_csvs)
-    
+
     if any(contains(string([id(:, 1:5)]), list_csvs(i).name(1:5) ))
         idx.listcsvs(i) = 1;
         idx.events(i) = find(contains(string([id(:, 1:5)]), list_csvs(i).name(1:5) ) == 1);
         to_load(i).csv = list_csvs(i).name;
         to_load(i).events = events(find(contains(string([id(:, 1:5)]), list_csvs(i).name(1:5) ) == 1));
     else
-        idx(i) = 0;
+        if i+1 ~= length(EEG.event) & any(EEG.event(i+1).type == [100 101 106 107])
+            EEG.event(i).identification = EEG.event(i+1).type
+        end
+        if i+2 ~= length(EEG.event) & any(EEG.event(i+2).type == [1 2 3 4])
+            EEG.event(i).pas = EEG.event(i+2).type
+        elseif i+3 ~= length(EEG.event) & any(EEG.event(i+3).type == [1 2 3 4])
+            EEG.event(i).pas = EEG.event(i+3).type
+        elseif i+4 ~= length(EEG.event) & any(EEG.event(i+4).type == [1 2 3 4])
+            EEG.event(i).pas = EEG.event(i+4).type
+        end
     end
 end

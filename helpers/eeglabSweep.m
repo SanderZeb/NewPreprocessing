@@ -1,0 +1,3 @@
+function eeglabSweep
+    clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
+end

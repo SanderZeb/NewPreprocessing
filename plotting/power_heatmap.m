@@ -3,9 +3,9 @@ for paradigm = 2:3
     if paradigm == 1
         settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
     elseif paradigm == 2
-        settings.paradigm = 3; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+        settings.paradigm = 3; 
     elseif paradigm == 3
-        settings.paradigm = 4; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+        settings.paradigm = 4; 
     end
 
 
@@ -26,7 +26,9 @@ for paradigm = 2:3
         root = 'D:\Drive\1 - Threshold\';
         % 16942_1; 19520_1; 19933_1; 37104_1; 41820_1; 45997_1; 82170_1;
         % 87808_1; 96269_1
-        participants_to_drop = [5 6 7 37 40 46 88 101 117]; % due to the poor ICA decoposition
+        %participants_to_drop = [5 6 7 37 40 46 88 101 117]; % due to the poor ICA decoposition
+
+        participants_to_drop = [7 27 42 43 85 114 122 123];
     elseif settings.paradigm == 2
         root = 'D:\Drive\2 - Cue\';
     elseif settings.paradigm == 3
@@ -60,30 +62,30 @@ for paradigm = 2:3
 
     %     try
     %
-    %         load([root 'events.mat']);
-    %         fileEEGData=listEEGData(1).name;
-    %         EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
+            load([root 'events_new2.mat']);
+            fileEEGData=listEEGData(1).name;
+            EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
     %
     %     catch
 
-    for s=[1:participants]
-        fileEEGData=listEEGData(s).name;
-        EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
-        if settings.paradigm ==1
-            EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 2
-            EEG = pop_selectevent( EEG, 'type',[61 62 63 64] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 3
-            EEG = pop_selectevent( EEG, 'type',[101 100 106 107] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 4
-            EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-
-        end
-        chanlocs_all{s} = EEG.chanlocs;
-        events{s} = EEG.event;
-    end
-    save([root 'events.mat'], 'events');
-    %     end
+%     for s=[1:participants]
+%         fileEEGData=listEEGData(s).name;
+%         EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
+%         if settings.paradigm ==1
+%             EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 2
+%             EEG = pop_selectevent( EEG, 'type',[61 62 63 64] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 3
+%             EEG = pop_selectevent( EEG, 'type',[101 100 106 107] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 4
+%             EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+% 
+%         end
+%         chanlocs_all{s} = EEG.chanlocs;
+%         events{s} = EEG.event;
+%     end
+%     save([root 'events.mat'], 'events');
+%     %     end
     clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
 
 
@@ -129,17 +131,17 @@ for paradigm = 2:3
         participantID = listTFData(s).participant;
         if all(participantID ~= [participants_to_drop])
         channel = listTFData(s).channel;
-        participant_event = events{participantID};
+        participant_event = events_new2{participantID};
         temp = load([pathTFData listTFData(s).name]);
         data = abs(temp.tfdata);
         %data = data(:,:,:);
 
-        idx_highpas = [participant_event.pas] >= 2;
-        idx_lowpas = [participant_event.pas] == 1;
+        idx_highpas = [participant_event.pas_resp] >= 2;
+        idx_lowpas = [participant_event.pas_resp] == 1;
 
         if settings.paradigm==1 | settings.paradigm == 4
-            idx_corr = [participant_event.identification2] ==1;
-            idx_inc = [participant_event.identification2] == 0;
+            idx_corr = [participant_event.accuracy] ==1;
+            idx_inc = [participant_event.accuracy] == 0;
         elseif settings.paradigm == 3
             idx_corr = [participant_event.corr_corr] == 1
             idx_inc = [participant_event.corr_corr] == 0
