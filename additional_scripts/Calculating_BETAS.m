@@ -1,7 +1,7 @@
-settings.paradigm = 1;
-settings.inverted = 1;
+settings.paradigm = 4;
+settings.inverted = 0;
 settings.intercept = 0;
-settings.confirmatory = 1;
+settings.confirmatory = 0;
 %
 % if n ==1
 %     settings.inverted = 1;
@@ -44,8 +44,8 @@ elseif settings.inverted == 0 & settings.intercept== 1
     mkdir(pathTFData, 'betas_intercept');
     pathBETAS = [pathTFData '\betas_intercept\']
 elseif settings.inverted== 0 & settings.intercept== 0
-    mkdir(pathTFData, 'betas');
-    pathBETAS = [pathTFData '\betas\']
+    mkdir(pathTFData, 'betas2');
+    pathBETAS = [pathTFData '\betas2\']
 end
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
 addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
@@ -231,11 +231,14 @@ for s=1:length(listTFData)
             x_standarized(:, 1) = zscore(x(:, 1)); % PAS
             x_standarized(:, 2) = zscore(x(:, 2)); % DETECTION
             x_standarized(:, 3) = zscore(x(:, 3)); % IDENTIFICATION
+            x_standarized(:, 4) = x_standarized(:, 1).*x_standarized(:, 3); % interaction
         end
         
         if settings.paradigm == 3 | settings.paradigm == 4
             x_standarized(:, 1) = zscore(x(:, 1)); % PAS
             x_standarized(:, 2) = zscore(x(:, 2)); % IDENTIFICATION
+            x_standarized(:, 3) = x_standarized(:, 1).*x_standarized(:, 2); % interaction
+
         end
         
         
@@ -260,9 +263,11 @@ for s=1:length(listTFData)
                     beta_pas(j, k) = beta(1, 1);
                     beta_detection(j,k) = beta(2, 1);
                     beta_identification(j,k) = beta(3,1);
+                    beta_interaction(j,k) = beta(4,1);
                 elseif settings.paradigm == 3 | settings.paradigm == 4
                     beta_pas(j, k) = beta(1, 1);
                     beta_identification(j,k) = beta(2,1);
+                    beta_interaction(j,k) = beta(3,1);
                 end
                 
             end
@@ -273,9 +278,12 @@ for s=1:length(listTFData)
             save([pathBETAS num2str(participantID) '_Betas_pas_chann_' num2str(channel)], 'beta_pas')
             save([pathBETAS num2str(participantID) '_Betas_detection_chann_' num2str(channel)], 'beta_detection')
             save([pathBETAS num2str(participantID) '_Betas_identification_chann_' num2str(channel)], 'beta_identification')
+            save([pathBETAS num2str(participantID) '_Betas_interaction_chann_' num2str(channel)], 'beta_interaction')
+
         elseif settings.paradigm == 3 | settings.paradigm == 4
             save([pathBETAS num2str(participantID) '_Betas_pas_chann_' num2str(channel)], 'beta_pas')
             save([pathBETAS num2str(participantID) '_Betas_identification_chann_' num2str(channel)], 'beta_identification')
+            save([pathBETAS num2str(participantID) '_Betas_interaction_chann_' num2str(channel)], 'beta_interaction')
         end
     end
     clear temp data y* x* beta* empty* participant_event participantID channel id_to_drop

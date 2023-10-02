@@ -19,7 +19,7 @@ pathEEGData = [root '\MARA\']
 savepath = [pathTFData '\export\']
 
 addpath 'C:\Users\user\Desktop\eeglab-eeglab2021.0'
-addpath 'C:\Program Files\MATLAB\R2019b\toolbox\stats\stats'
+addpath 'C:\Program Files\MATLAB\R2022b\toolbox\stats\stats'
 eeglab nogui
 
 listTFData=dir([pathTFData 'tfdata*.mat'  ]);
@@ -34,7 +34,9 @@ close all
 %settings.times_roi = times >= -650 & times <= -50;
 %settings.times_roi = times >= -1250 & times <= -700;
 %settings.freqs_roi = freqs>= 8 & freqs <= 14;
-settings.times_roi = times >= -800 & times <= -400;
+%settings.times_roi = times >= -800 & times <= -400;
+settings.times_roi = times >= -1200 & times <= -500;
+
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
@@ -178,13 +180,11 @@ for s=1:length(new_list)
     participant_event([id_to_drop]) = [];
 
 
-    temp = load([pathTFData new_list(s).name]);
-    temp2 = temp.tfdata(:,:, [participant_event.epoch]);
-    data_raw(n, :,:,:) = abs(temp2).^2      ;                                              % convert to (uV^2/Hz)
-
-
-
     if s+1 > length(new_list) || participantID ~= new_list(s+1).participant
+        temp = load([pathTFData new_list(s).name]);
+        temp2 = temp.tfdata(:,:, [participant_event.epoch]);
+        data_raw(n, :,:,:) = abs(temp2).^2      ;                                              % convert to (uV^2/Hz)
+    
         data_temp = squeeze(mean(data_raw, 1));
         data_db(:,:,:) = 10 * log10(data_temp) ;
 
@@ -240,7 +240,7 @@ end
 
 
 
-writetable(struct2table(all), ['D:\export\corrected_exp5_scenes_alpha.csv'])
+writetable(struct2table(all), ['D:\export\corrected_exp5_scenes_alpha_tw12_05.csv'])
 
-save([pathTFData '\corrected_exp5_scenes_alpha.mat'],'all')
+save([pathTFData '\corrected_exp5_scenes_alpha_tw12_05.mat'],'all')
 

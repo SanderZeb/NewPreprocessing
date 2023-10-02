@@ -1,7 +1,7 @@
-settings.paradigm = 3;
+settings.paradigm = 4;
 settings.inverted = 0;
 settings.intercept = 0;
-settings.confirmatory = 0;
+settings.confirmatory = 1;
 %
 % if n ==1
 %     settings.inverted = 1;
@@ -56,7 +56,8 @@ listEEGData=dir([pathEEGData '*.set'  ]);
 participants = length(listEEGData)
 
 try
-    load([root 'events_new.mat'])
+    load([root 'events_new2.mat'])
+    events_new = events_new2;
     fileEEGData=listEEGData(1).name;
     EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
 catch
@@ -79,7 +80,7 @@ catch
         end
         events{s} = EEG.event;
     end
-    save([root 'events.mat'], 'events');
+    %save([root 'events.mat'], 'events');
 end
 clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY fileEEGData
 
@@ -96,7 +97,7 @@ end
 clear temp data_timef y* x* beta* EEG B file s
 close all
     clear temp data_timef y* x* beta* empty* participant_event participantID channel id_to_drop
-for s=s:length(listTFData)
+for s=1:length(listTFData)
     participantID = listTFData(s).participant;
     channel = listTFData(s).channel;
     

@@ -27,7 +27,7 @@ chanlocs = EEG.chanlocs;
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
-settings.times_roi = times >= -400 & times <= 0;
+settings.times_roi = times >= -1000 & times <= 0;
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
@@ -59,7 +59,7 @@ channels.Iz = find(strcmp({chanlocs.labels}, 'Iz')==1);
 channels.VEOG = find(strcmp({chanlocs.labels}, 'VEOG')==1);									%INDEX CHANNEL
 channels.HEOG = find(strcmp({chanlocs.labels}, 'HEOG')==1);									%INDEX CHANNEL
 
-settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 channels.PO8 channels.PO3 channels.PO4 channels.POz channels.Iz channels.P1 channels.Pz channels.P2 channels.P3 channels.P5 channels.P7];
+settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 channels.PO8 channels.PO3 channels.PO4 channels.POz channels.Iz channels.P1 channels.Pz channels.P2 channels.P3 channels.P5 channels.P7 channels.P4 channels.P6];
 settings.selected_channels_left = [channels.O1  channels.PO3  channels.PO7 channels.P1 channels.P3 channels.P5 channels.P7]
 settings.selected_channels_right = [channels.O2  channels.PO4  channels.PO8 channels.P2 channels.P4 channels.P6 channels.P8]
 
@@ -95,10 +95,11 @@ new_list = table2struct(sortedT)
 clear all_data participantID id idx current participant_event participant_event_clean temp* data* n s i 
 all_data = []
 n=1;
-for s=s:length(new_list)
+for s=1:length(new_list)
     participantID = new_list(s).participant;
     %if ~any(participantID==[7 8 27 29 30 42 43 44 45 46 47 58 85 89 90 101 114 120 123 129])
-    if ~any(participantID==[7 27 42 43 85 114 122 123])
+    %if ~any(participantID==[7 27 42 43 85 114 122 123])
+    if ~any(participantID==[5 6 7 18 27 42 43 85 114 122 123])
         channel = new_list(s).channel;
         id = listEEGData(participantID).name(1:5);
         for i = 1:length(events)
@@ -251,7 +252,7 @@ end
 
 writetable((all_data), [pathTFData '\behawior_alpha.csv'])
 if settings.paradigm == 1
-    writetable((all_data), ['D:\export\exp1_threshold_behawior_alpha.csv'])
+    writetable((all_data), ['D:\export\exp1_threshold_behawior_alpha_final.csv'])
 elseif settings.paradigm == 2
     writetable((all_data), ['D:\export\exp2_cue_behawior_alpha.csv'])
 elseif settings.paradigm == 3

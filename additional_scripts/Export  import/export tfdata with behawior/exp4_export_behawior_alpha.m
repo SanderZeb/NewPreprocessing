@@ -27,7 +27,8 @@ chanlocs = EEG.chanlocs;
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
-settings.times_roi = times >= -800 & times <= -150;
+%settings.times_roi = times >= -800 & times <= -150;
+settings.times_roi = times >= -1000 & times <= 0;
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
@@ -65,8 +66,8 @@ settings.selected_channels_right = [channels.O2  channels.PO4  channels.PO8 chan
 
 try
     
-    load([root 'events_new.mat']);
-    events = events_new;
+    load([root 'events_new3.mat']);
+    events = events_new3;
     for i = 1:size(events,2)
          if ~any(i==[82 61 62 63])
             if strcmp(events{1, i}.VarName41(1), "60")
@@ -149,9 +150,9 @@ new_list = table2struct(sortedT)
 clear all_data participantID id idx current participant_event participant_event_clean temp* data* n  i 
 all_data = []
 n=1;
-for s=s:length(new_list)
+for s=1:length(new_list)
     participantID = new_list(s).participant;
-    if ~any(participantID==[82 61 62 63])
+    if ~any(participantID==[82 61 62 63 ])
     %if participantID ~= 41 & participantID~= 66 & participantID~= 103 & participantID~= 142 & participantID~= 145 & participantID~= 162
         channel = new_list(s).channel;
         id = listEEGData(participantID).name(1:5);
@@ -179,7 +180,13 @@ for s=s:length(new_list)
         current2 = cat(2, current, eegEvent);
         
         current = [];
+
         current = current2;
+             if (contains(current(1).stimFile, 'FE') & current(1).type == 103) || (contains(current(1).stimFile, 'NE') & current(1).type == 104)
+                version = 1;
+            elseif (contains(current(1).stimFile, 'FE') & current(1).type == 104) || (contains(current(1).stimFile, 'NE') & current(1).type == 103)
+                version = 3;
+            end
         for i = 1:size(current, 1)
             if current.x(i) == 1
                 current.sex(i) = 1; % female
@@ -218,7 +225,17 @@ for s=s:length(new_list)
                 current.accuracy(i) = 1;
             elseif current.stim_resp(i) ~= current.stim(i)
                 current.accuracy(i) = 0;
+            end
 
+            if version == 1
+                current(i).version = 1;
+            elseif version == 3
+                current(i).version = 3;
+                if current(i).accuracy == 1
+                    current(i).accuracy = 0;
+                elseif current(i).accuracy == 0
+                    current(i).accuracy = 1;
+                end
             end
 
 
@@ -234,9 +251,6 @@ for s=s:length(new_list)
         participant_event_clean = current;
 
 
-        % because of errors 
-        participant_event_clean = removevars(participant_event_clean, "pasResponse_releaseRT");
-        participant_event_clean = removevars(participant_event_clean, "image");
 
 
 
@@ -337,7 +351,8 @@ end
 % end
 
 
-writetable((all_data), [pathTFData '\behawior_alpha.csv'])
+writetable((all_data), [pathTFData '\behawior_alpha_tw-1_0.csv'])
+
 if settings.paradigm == 1
     writetable((all_data), ['D:\export\exp1_threshold_behawior_alpha.csv'])
 elseif settings.paradigm == 2
@@ -345,7 +360,7 @@ elseif settings.paradigm == 2
 elseif settings.paradigm == 3
     writetable((all_data), ['D:\export\exp3_mask_behawior_alpha.csv'])
 elseif settings.paradigm == 4
-    writetable((all_data), ['D:\export\exp4_faces_behawior_alpha.csv'])
+    writetable((all_data), ['D:\export\exp4_faces_behawior_alpha_tw-1_0.csv'])
 end
-save([pathTFData '\behawior_alpha.mat'],'all_data')
+save([pathTFData '\behawior_alpha_tw-1_0.mat'],'all_data')
 

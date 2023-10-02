@@ -6,13 +6,13 @@ settings.intercept = 0; % 1 for equation with intercept included; 0 for equation
 settings.confirmatory = 0;
 
 % topoplot cluster permutation test settings
-settings.n_perm = 1000;
-settings.fwer = .01;
+settings.n_perm = 10000;
+settings.fwer = .05;
 settings.tail = 0;
 
 % cluster permutation test settings
-settings.perm = 1000;
-settings.p_val = 0.01;
+settings.perm = 10000;
+settings.p_val = 0.05;
 
 % general plotting settings
 settings.limits.up = 0.06;
@@ -20,7 +20,7 @@ settings.limits.down = -0.06;
 
 
 settings.onlyClusters = 0;
-settings.TopoWithMask = 1;
+settings.TopoWithMask = 0;
 settings.oldway = 2; % 0 for 4 topoplots [-800 -600; -600 -400; -400 -200; -200 0]; 1 for multiple topoplots with averaged timewindow (specified by settings.step); -1 for multiple topoplots with timewindow from single timepoint
 settings.prestimulusOnly = 0;
 
@@ -60,8 +60,8 @@ elseif settings.inverted == 0 & settings.intercept== 1
     mkdir(pathBETAS, '\plots_intercept\');
     savepath = [pathBETAS '\plots_intercept\']
 elseif settings.inverted== 0 & settings.intercept== 0
-    mkdir(pathTFData, 'betas');
-    pathBETAS = [pathTFData '\\betas\']
+    mkdir(pathTFData, 'betas2');
+    pathBETAS = [pathTFData '\\betas2\']
     mkdir(pathBETAS, '\plots\');
     savepath = [pathBETAS '\plots\']
 end
@@ -76,32 +76,32 @@ listEEGData=dir([pathEEGData '*.set'  ]);
 participants = length(listEEGData);
 
 
-
-
-try
-    
-    load([root 'events.mat']);
-    
-catch
-    for s=[1:participants]
-        fileEEGData=listEEGData(s).name;
-        EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
-        if settings.paradigm ==1
-            EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 2
-            EEG = pop_selectevent( EEG, 'type',[61 62 63 64] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 3
-            EEG = pop_selectevent( EEG, 'type',[101 100 106 107] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 4
-            EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
-        elseif settings.paradigm == 5
-            
-        end
-        chanlocs_all{s} = EEG.chanlocs;
-        events{s} = EEG.event;
-    end
-    save([root 'events.mat'], 'events');
-end
+% 
+% 
+% try
+%     
+%     load([root 'events.mat']);
+%     
+% catch
+%     for s=[1:participants]
+%         fileEEGData=listEEGData(s).name;
+%         EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
+%         if settings.paradigm ==1
+%             EEG = pop_selectevent( EEG, 'type',[120 121 126 127 130 131 136 137 140 141 146 147 150 151 156 157] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 2
+%             EEG = pop_selectevent( EEG, 'type',[61 62 63 64] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 3
+%             EEG = pop_selectevent( EEG, 'type',[101 100 106 107] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 4
+%             EEG = pop_selectevent( EEG, 'type',[103 104] ,'deleteevents','on','deleteepochs','on','invertepochs','off');
+%         elseif settings.paradigm == 5
+%             
+%         end
+%         chanlocs_all{s} = EEG.chanlocs;
+%         events{s} = EEG.event;
+%     end
+%     save([root 'events.mat'], 'events');
+% end
 clear ALLCOM ALLEEG CURRENTSET CURRENTSTUDY globalvars LASTCOM PLUGINLIST STUDY
 
 
@@ -158,7 +158,8 @@ close all
 if settings.paradigm == 1
     % 16942_1; 19520_1; 19933_1; 37104_1; 41820_1; 45997_1; 82170_1;
     % 87808_1; 96269_1
-    participants_to_drop = [5 6 7 37 40 46 88 101 117]; % due to the poor ICA decoposition
+    %participants_to_drop = [5 6 7 37 40 46 88 101 117]; % due to the poor ICA decoposition
+    participants_to_drop = [5 6 7 10 42 43]; % due to the poor ICA decoposition
 end
 if settings.paradigm == 3
     %
@@ -169,14 +170,14 @@ if settings.paradigm == 4
     participants_to_drop = [17 30 50 54 67 69]; % due to the poor ICA decoposition
 end
 
-events(participants_to_drop) = [];
+% events(participants_to_drop) = [];
 to_reject = any([listBetas.participant] == participants_to_drop');
 listBetas(to_reject) = []
 
-try
-    
-    load([pathBETAS 'betas.mat']); % this process (loading beta results [Participants X electrodes]) may take a while, so we will try to load all beta files
-catch
+% try
+%     
+%     load([pathBETAS 'betas.mat']); % this process (loading beta results [Participants X electrodes]) may take a while, so we will try to load all beta files
+% catch
     for s=1:length(listBetas)
         
         clear temp;
@@ -195,8 +196,8 @@ catch
         display(['Processing ' num2str(s) ' out of: ' num2str(length(listBetas))]);
         
     end
-    save([pathBETAS 'betas.mat'], 'betas','-v7.3');
-end
+%     save([pathBETAS 'betas.mat'], 'betas','-v7.3');
+% end
 
 
 for i = 1:length(fnames)
@@ -207,22 +208,26 @@ for i = 1:length(fnames)
     end
 end
 
-elec.CP1 = find(strcmp({chanlocs.labels}, 'CP1')==1)	;
-elec.CPz = find(strcmp({chanlocs.labels}, 'CPz')==1)	;
-elec.CP2 = find(strcmp({chanlocs.labels}, 'CP2')==1)	;
-elec.P1 = find(strcmp({chanlocs.labels}, 'P1')==1)		;
-elec.P2 = find(strcmp({chanlocs.labels}, 'P2')==1)		;
-elec.Pz = find(strcmp({chanlocs.labels}, 'Pz')==1)		;
-elec.O1 = find(strcmp({chanlocs.labels}, 'O1')==1)		;
-elec.Oz = find(strcmp({chanlocs.labels}, 'Oz')==1)		;
-elec.O2 = find(strcmp({chanlocs.labels}, 'O2')==1)		;
-elec.PO7 = find(strcmp({chanlocs.labels}, 'PO7')==1)	;
-elec.PO8 = find(strcmp({chanlocs.labels}, 'PO8')==1)	;
-elec.PO3 = find(strcmp({chanlocs.labels}, 'PO3')==1)	;
-elec.PO4 = find(strcmp({chanlocs.labels}, 'PO4')==1)	;
-
-electrodes = [elec.CP1 elec.CPz elec.CP2 elec.P1 elec.P2 elec.Pz elec.O1 elec.Oz elec.O2 elec.PO7 elec.PO8 elec.PO3 elec.PO4];
-
+channels.O1 = find(strcmp({chanlocs.labels}, 'O1')==1);
+channels.Oz = find(strcmp({chanlocs.labels}, 'Oz')==1);
+channels.O2 = find(strcmp({chanlocs.labels}, 'O2')==1);
+channels.PO7 = find(strcmp({chanlocs.labels}, 'PO7')==1);
+channels.PO8 = find(strcmp({chanlocs.labels}, 'PO8')==1);
+channels.PO3 = find(strcmp({chanlocs.labels}, 'PO3')==1);
+channels.PO4 = find(strcmp({chanlocs.labels}, 'PO4')==1);
+channels.POz = find(strcmp({chanlocs.labels}, 'POz')==1);
+channels.P1 = find(strcmp({chanlocs.labels}, 'P1')==1);
+channels.P2 = find(strcmp({chanlocs.labels}, 'P2')==1);
+channels.P3 = find(strcmp({chanlocs.labels}, 'P3')==1);
+channels.P4 = find(strcmp({chanlocs.labels}, 'P4')==1);
+channels.P5 = find(strcmp({chanlocs.labels}, 'P5')==1);
+channels.P6 = find(strcmp({chanlocs.labels}, 'P6')==1);
+channels.P7 = find(strcmp({chanlocs.labels}, 'P7')==1);
+channels.P8 = find(strcmp({chanlocs.labels}, 'P8')==1);
+channels.Pz = find(strcmp({chanlocs.labels}, 'Pz')==1);
+channels.Iz = find(strcmp({chanlocs.labels}, 'Iz')==1);
+settings.selected_channels = [channels.O1 channels.Oz channels.O2 channels.PO7 channels.PO3 channels.POz channels.PO4 channels.PO8 channels.Iz channels.P7 channels.P5 channels.P3 channels.P1 channels.Pz channels.P2 channels.P4 channels.P6 channels.P8];
+electrodes = settings.selected_channels;
 
 for n = 1:length(fnames)
     for i=1:size(betas.(fnames{n,1}), 1)

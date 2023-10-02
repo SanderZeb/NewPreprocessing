@@ -1,12 +1,12 @@
 clear all
 % general settings
-settings.paradigm = 3; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
+settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
 settings.inverted = 0; % 1 for regression equation with X as magnitude and Y as responses; 0 for reg. eq. with X as responses and Y as magnitude
 settings.intercept = 0; % 1 for equation with intercept included; 0 for equation without intercept & interactions
 settings.confirmatory = 0;
 
 % topoplot cluster permutation test settings
-settings.n_perm = 1000;
+settings.n_perm = 10000;
 settings.fwer = .01;
 settings.tail = 0;
 
@@ -272,7 +272,7 @@ for i=1:length(fnames_topo)
     settings.prefix = 'signif_mask_'; % additional prefix for naming plots
     heads_cols = 3  ;
     heads_rows = ceil(size(temp,2)/heads_cols);
-    figure('Position', [0 0 ss(3) ss(4)], "Visible", "on"); hold on;
+    figure('Position', [0 0 ss(3) ss(4)], "Visible", "off"); hold on;
     %     figure('Position', [0 0 ss(3) ss(4)], "Visible", "on"); hold on;
        % t = tiledlayout(heads_cols, heads_rows, 'TileSpacing','normal');
     %  t = tiledlayout(heads_cols, heads_rows, 'TileSpacing','normal');

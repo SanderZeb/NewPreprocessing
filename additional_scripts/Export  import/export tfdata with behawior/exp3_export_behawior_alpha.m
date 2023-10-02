@@ -27,7 +27,7 @@ chanlocs = EEG.chanlocs;
 clear EEG ALLCOM ALLEEG LASTCOM CURRENTSET CURRENTSTUDY STUDY PLUGINLIST currentFile channel B C participantID s
 close all
 
-settings.times_roi = times >= -800 & times <= 0;
+settings.times_roi = times >= -1200 & times <= 0;
 settings.freqs_roi = freqs>= 7 & freqs <= 14;
 
 channels(1).M1 = find(strcmp({chanlocs.labels}, 'M1')==1);  			%INDEX CHANNEL
@@ -114,8 +114,9 @@ clear all_data participantID id idx current participant_event participant_event_
 all_data = []
 n=1;
 for s=s:length(new_list)
-    participantID = new_list(s).participant;
+    participantID = new_list(s).participant; 
     if participantID ~= 41 & participantID~= 66 & participantID~= 103 & participantID~= 142 & participantID~= 145 & participantID~= 162
+    %if participantID ~= 82 & participantID~= 128 & participantID~= 129 & participantID~= 161 
         channel = new_list(s).channel;
         id = listEEGData(participantID).name(1:5);
         for i = 1:length(events)
@@ -276,7 +277,7 @@ if settings.paradigm == 1
 elseif settings.paradigm == 2
     writetable((all_data), ['D:\export\exp2_cue_behawior_alpha.csv'])
 elseif settings.paradigm == 3
-    writetable((all_data), ['D:\export\exp3_mask_behawior_alpha.csv'])
+    writetable((all_data), ['D:\export\exp3_mask_behawior_alpha_new.csv'])
 elseif settings.paradigm == 4
     writetable((all_data), ['D:\export\exp4_faces_behawior_alpha.csv'])
 end

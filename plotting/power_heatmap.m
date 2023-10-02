@@ -1,4 +1,4 @@
-for paradigm = 2:3
+for paradigm = 3:3
 
     if paradigm == 1
         settings.paradigm = 1; % 1 - threshold; 2 - cue; 3 - mask; 4 - faces; 5 - scenes
@@ -37,7 +37,8 @@ for paradigm = 2:3
     elseif settings.paradigm == 4
         root = 'D:\Drive\4 - Faces\';
         % 35464_4; 52235_4; 72692_4; 79587_4; 91259_4; 95229_4;
-        participants_to_drop = [17 30 50 54 67 69]; % due to the poor ICA decoposition
+        %participants_to_drop = [17 30 50 54 67 69]; % due to the poor ICA decoposition
+        participants_to_drop = [61 62 63 82]; % due to the poor ICA decoposition
     elseif settings.paradigm == 5
         root = 'D:\Drive\5 - Scenes\';
     end
@@ -62,7 +63,8 @@ for paradigm = 2:3
 
     %     try
     %
-            load([root 'events_new2.mat']);
+            load([root 'events_new3.mat']);
+            events_new2 = events_new3 
             fileEEGData=listEEGData(1).name;
             EEG = pop_loadset('filename',fileEEGData,'filepath',pathEEGData);
     %
@@ -153,12 +155,12 @@ for paradigm = 2:3
         data_all_inc_id(participantID, channel, :, :) = squeeze(mean(data(:,:, idx_inc), 3));
 
 
-        if settings.paradigm == 4
-            idx_neutral = [participant_event.stimulus] == 103
-            idx_fearful = [participant_event.stimulus] == 104
-            data_all_fearful(participantID, channel, :, :) = squeeze(mean(data(:,:, idx_fearful), 3));
-            data_all_neutral(participantID, channel, :, :) = squeeze(mean(data(:,:, idx_neutral), 3));
-        end
+%         if settings.paradigm == 4
+%             idx_neutral = [participant_event.stimulus] == 103
+%             idx_fearful = [participant_event.stimulus] == 104
+%             data_all_fearful(participantID, channel, :, :) = squeeze(mean(data(:,:, idx_fearful), 3));
+%             data_all_neutral(participantID, channel, :, :) = squeeze(mean(data(:,:, idx_neutral), 3));
+%         end
 
         display(['currently processing: ' num2str(s) ' of ' num2str(length(listTFData)) ]);
         end
@@ -167,10 +169,10 @@ for paradigm = 2:3
     save([savepath 'tfdata_before_avg_lowpas.mat'], 'data_all_lowpas');
     save([savepath 'tfdata_before_avg_corr.mat'], 'data_all_corr_id');
     save([savepath 'tfdata_before_avg_inc.mat'], 'data_all_inc_id');
-    if settings.paradigm == 4
-        save([savepath 'tfdata_before_avg_fearfull.mat'], 'data_all_fearful');
-        save([savepath 'tfdata_before_avg_neutral.mat'], 'data_all_neutral');
-    end
+%     if settings.paradigm == 4
+%         save([savepath 'tfdata_before_avg_fearfull.mat'], 'data_all_fearful');
+%         save([savepath 'tfdata_before_avg_neutral.mat'], 'data_all_neutral');
+%     end
 
 
     % end
